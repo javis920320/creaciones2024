@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 use Inertia\Inertia;
 use App\Models\Client;
 use Illuminate\Support\Facades\Redirect;
+
 class ClientController extends Controller
 {
     /**
@@ -13,10 +14,10 @@ class ClientController extends Controller
      */
     public function index()
     {
-        $clients=Client::all();
+        $clients = Client::all();
         //return view("clients.index",compact('clients'));
-        return Inertia::render('Clients/Index',[
-            'clients'=>$clients
+        return Inertia::render('Clients/Index', [
+            'clients' => $clients
         ]);
     }
 
@@ -25,7 +26,7 @@ class ClientController extends Controller
      */
     public function create()
     {
-       return Inertia::render('Clients/Create');
+        return Inertia::render('Clients/Create');
     }
 
     /**
@@ -33,28 +34,39 @@ class ClientController extends Controller
      */
     public function store(Request $request)
     {
-
-         $request->validate([
+        // Validar los datos de la solicitud
+        
+        $validatedData = $request->validate([
             'full_name' => 'required|string|max:255',
             'email' => 'required|string|max:255|unique:clients',
-            'phone'=>'nullable|string|max:20',
-            'address'=>'nullable|string|max:255',
-            'city'=>'nullable|string|max:255',
-            'state'=>'nullable|string|max:255',
-            'postal_code'=>'nullable|string|max:20',
-            'country'=>'nullable|string|max:255',
-            'birthday'=>'nullable|date',
-            'identification_number'=>'nullable|string|max:255',
-            'gender'=>'nullable|in:male,female,other',
-            'notes'=>'nullable|string',
-            'status'=>'nullable|in:active,inactive',
-        ]); 
-            $client=Client::create($request->all());
-          //  return redirect()->route('client.create')->with('success','Cliente creado correctamente');
-          return redirect()->route('clients.index');
-           /*  return  Inertia::render('Clients/Create',[
-            'client'=>$client
-             ]);   */
+            'phone' => 'nullable|string|max:20',
+            'address' => 'nullable|string|max:255',
+            'city' => 'nullable|string|max:255',
+            'state' => 'nullable|string|max:255',
+            'postal_code' => 'nullable|string|max:20',
+            'country' => 'nullable|string|max:255',
+            'birthday' => 'nullable|date',
+            'identification_number' => 'nullable|string|max:255|unique:clients',
+            'gender' => 'nullable|in:male,female,other',
+            'notes' => 'nullable|string',
+            'status' => 'nullable|in:active,inactive',
+        ]);
+    
+        // Crear el nuevo cliente
+        $newClient = Client::create($validatedData);
+    
+        // Verificar si la solicitud es AJAX (por ejemplo, a través de Axios)
+        if ($request->wantsJson()) {
+            return response()->json([
+                'success' => true,
+                'message' => 'Cliente creado exitosamente.',
+                'client' => $newClient,
+            ]);
+        }
+    
+        // Para solicitudes normales (Inertia.js, por ejemplo)
+        return redirect()->route('clients.index')
+            ->with('success', 'Cliente creado exitosamente.');
     }
 
     /**
@@ -70,54 +82,46 @@ class ClientController extends Controller
      */
     public function edit(Client $client)
     {
-        return  Inertia::render('Clients/Edit',[
-            "client"=>[
-                'id'=>$client->id,
-                'phone'=>$client->phone,
-                'full_name'=>$client->full_name,
-                'email'=>$client->email,
-                'address'=>$client->address,
-                'country'=>$client->country,
-                
-            ]
+
+        return Inertia("Clients/Create", [
+            "client" => $client
         ]);
     }
 
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request)
+    public function update(Request $request, Client $idclient)
     {
-        
-      
+
+
         // Validate the request data
-    $validatedData = $request->validate([
-        'full_name' => 'required|string|max:255',
-         'email' => 'required|email|unique:clients,email,' . $request->id,
-        'phone' => 'nullable|string|max:20',
-        // Add other fields as necessary
-    ]);
-    
+        $validatedData = $request->validate([
+            'full_name' => 'required|string|max:255',
+            'email' => 'required|email|unique:clients,email,' . $idclient->id,
+            'phone' => 'required|string|max:20',
+            'address' => 'nullable|string|max:255',
+            'city' => 'nullable|string|max:255',
+            'state' => 'nullable|string|max:255',
+            'postal_code' => 'nullable|string|max:20',
+            'country' => 'nullable|string|max:255',
+            'birthday' => 'nullable|date',
+            'identification_number' => 'required|string|max:255|unique:clients,'.$idclient->id,
+            'gender' => 'nullable|in:male,female,other',
+            'notes' => 'nullable|string',
+            'status' => 'nullable|in:active,inactive',
+        ]);
 
-    // Find the client by ID
-    $client = Client::findOrFail($request->id);
-    
+
+        if ($idclient->update($validatedData)) {
+            return redirect()->route('clients.index', $idclient->id)
+                ->with('success', 'Client updated successfully.');
+        };
+
+        
 
 
-    // Update the client's information
-    $client->full_name = $validatedData['full_name'];
-    $client->email = $validatedData['email'];
-    $client->phone = $validatedData['phone'] ?? $client->phone;
-    // Update other fields as necessary
 
-    // Save the updated client
-    $client->save();
-
-    // Redirect to the edit page with a success message
-     return redirect()->route('clients.edit', $client->id)
-                     ->with('success', 'Client updated successfully.');  
-     //return Redirect::route("clients.edit");
- 
     }
 
     /**
@@ -126,5 +130,15 @@ class ClientController extends Controller
     public function destroy(string $id)
     {
         //
+    }
+
+    public  function serchClient($query)
+    {
+        $cliente = Client::where("full_name", $query)->get();
+
+        if (!$cliente) {
+            return response()->json(["error" => " client not found "]);
+        }
+        return response()->json($cliente);
     }
 }

@@ -24,4 +24,7 @@ class Client extends Model
         'registration_date',
         'status',
     ];
+     public function pedidos(){
+        return $this->hasMany(Pedido::class,'clientId');
+     }
 }

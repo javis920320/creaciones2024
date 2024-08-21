@@ -1,115 +1,188 @@
 import InputError from "@/Components/InputError";
 import InputLabel from "@/Components/InputLabel";
 import PrimaryButton from "@/Components/PrimaryButton";
+import Section from "@/Components/Section";
 import TextInput from "@/Components/TextInput";
 import AuthenticatedLayout from "@/Layouts/AuthenticatedLayout";
-import { Head, Link, useForm, usePage } from "@inertiajs/react";
+import { Head, Link, useForm } from "@inertiajs/react";
 import React from "react";
 
-const Create = ({ auth }) => {
-    const { data, errors, setData, processing, recentlySuccessful,post } =
-        useForm();
-
+const Create = ({ auth, client = null }) => {
+    const iseditable = !!client;
+    const { data, errors, setData, processing, post,put } = useForm({
+        full_name: client?.full_name || "",
+        email: client?.email || "",
+        phone: client?.phone || "",
+        identification_number: client?.identification_number || "",
+        address: client?.address || "",
+        city: client?.city || "",
+        birthday: client?.birthday || "",
+    });
 
     const HandleSubmit = (e) => {
         e.preventDefault();
-        post(route("client.store"));
+
+        if (iseditable) {
+            put(route("client.update",client.id));
+        } else {
+            post(route("client.store"));
+        }
     };
+
     return (
         <AuthenticatedLayout
             user={auth.user}
             header={
                 <h2 className="font-semibold text-xl text-gray-800 dark:text-gray-200 leading-tight">
                     Crear Cliente
+                    <span className="text-indigo-400 font-medium">/</span>
+                    <Link
+                        className="text-indigo-400 hover:text-indigo-600"
+                        href="/clients"
+                    >
+                        Clientes
+                    </Link>
                 </h2>
             }
         >
-            <Head title="Crear Cliente "></Head>
-            <Link
-                className="text-indigo-400 hover:text-indigo-600"
-                href="/clients"
-            >
-                Clientes
-            </Link>
-            <span className="text-indigo-400 font-medium">/</span>
-            <section className="p-4 sm:p-8 bg-white dark:bg-gray-800 shadow sm:rounded-lg">
-                <header>
-                    <h2 className="text-lg font-medium text-gray-900 dark:text-gray-100">
-                        Informacion Personal
-                    </h2>
+            <Head title="Crear Cliente " />
 
-                    <p className="mt-1 text-sm text-gray-600 dark:text-gray-400">
-                        Realiza la actualizacion de datos, los campos son
-                        requeridos.
-                    </p>
-                </header>
-                
-                <form onSubmit={HandleSubmit}>
-                    <div>
-                        
-                        <InputLabel>Nombre Completo</InputLabel>
-                        <TextInput
-                            onChange={(e) =>
-                                setData("full_name", e.target.value)
-                            }
-                            required
-                            isFocused
-                            autoComplete="full_name"
-                        />
-                        <InputError
-                            className="mt-2"
-                            message={errors.full_name}
-                        />
-                    </div>
-                    <div>
-                        <InputLabel>Identificación</InputLabel>
-                        <TextInput
-                            onChange={(e) => setData("identification_number", e.target.value)}
-                        />
-                        <InputError className="mt-2" message={errors.identification_number} />
-                    </div>
-                    <div>
-                        <InputLabel>Celular</InputLabel>
-                        <TextInput
-                            onChange={(e) => setData("phone", e.target.value)}
-                            required
-                            isfocused
-                        />
-                        <InputError className="mt-2" message={errors.phone} />
-                    </div>
-                    <div>
-                        <InputLabel>Email</InputLabel>
-                        <TextInput
-                        type="email"
-                            onChange={(e) => setData("email", e.target.value)}
-                        />
-                        <InputError className="mt-2" message={errors.email} />
-                    </div>
-                    <div>
-                        <InputLabel>Dirección</InputLabel>
-                        <TextInput
-                            onChange={(e) => setData("address", e.target.value)}
-                        />
-                        <InputError className="mt-2" message={errors.address} />
-                    </div>
-                    <div>
-                        <InputLabel>Ciudad</InputLabel>
-                        <TextInput
-                            onChange={(e) => setData("city", e.target.value)}
-                        />
-                        <InputError className="mt-2" message={errors.city} />
-                    </div>
-                    <div>
-                        <InputLabel>Fecha Nacimiento</InputLabel>
-                        <TextInput
-                        type="date"
-                            onChange={(e) => setData("birthday", e.target.value)}
-                        />
-                        <InputError className="mt-2" message={errors.birthday} />
-                    </div>
-                    <PrimaryButton>Nuevo Cliente</PrimaryButton>
-                </form>
-            </section>
+            <div className="max-w-7xl mx-auto sm:px-6 lg:px-8">
+                <div className="flex justify-between items-center mb-6">
+                    <h2 className="text-lg font-medium text-gray-900 dark:text-gray-100">
+                        Información Personal
+                    </h2>
+                </div>
+
+                <Section>
+                    
+                    <form onSubmit={HandleSubmit}>
+                        {JSON.stringify(errors)}
+                        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                            <div>
+                                <InputLabel>Nombre Completo</InputLabel>
+                                <TextInput
+                                value={data.full_name}
+                                    onChange={(e) =>
+                                        setData("full_name", e.target.value)
+                                    }
+                                    required
+                                    autoComplete="full_name"
+                                    className="mt-1 block w-full"
+                                />
+                                <InputError
+                                    className="mt-2"
+                                    message={errors.full_name}
+                                />
+                            </div>
+
+                            <div>
+                                <InputLabel>Identificación</InputLabel>
+                                <TextInput
+                                value={data.identification_number}
+                                    onChange={(e) =>
+                                        setData(
+                                            "identification_number",
+                                            e.target.value
+                                        )
+                                    }
+                                    className="mt-1 block w-full"
+                                />
+                                <InputError
+                                    className="mt-2"
+                                    message={errors.identification_number}
+                                />
+                            </div>
+
+                            <div>
+                                <InputLabel>Celular</InputLabel>
+                                <TextInput
+                                value={data.phone}
+                                    onChange={(e) =>
+                                        setData("phone", e.target.value)
+                                    }
+                                    required
+                                    className="mt-1 block w-full"
+                                />
+                                <InputError
+                                    className="mt-2"
+                                    message={errors.phone}
+                                />
+                            </div>
+
+                            <div>
+                                <InputLabel>Email</InputLabel>
+                                <TextInput
+                                value={data.email}
+                                    type="email"
+                                    onChange={(e) =>
+                                        setData("email", e.target.value)
+                                    }
+                                    className="mt-1 block w-full"
+                                />
+                                <InputError
+                                    className="mt-2"
+                                    message={errors.email}
+                                />
+                            </div>
+
+                            <div>
+                                <InputLabel>Dirección</InputLabel>
+                                <TextInput
+                                value={data.address}
+                                    onChange={(e) =>
+                                        setData("address", e.target.value)
+                                    }
+                                    className="mt-1 block w-full"
+                                />
+                                <InputError
+                                    className="mt-2"
+                                    message={errors.address}
+                                />
+                            </div>
+
+                            <div>
+                                <InputLabel>Ciudad</InputLabel>
+                                <TextInput
+                                value={data.city}
+                                    onChange={(e) =>
+                                        setData("city", e.target.value)
+                                    }
+                                    className="mt-1 block w-full"
+                                />
+                                <InputError
+                                    className="mt-2"
+                                    message={errors.city}
+                                />
+                            </div>
+
+                            <div>
+                                <InputLabel>Fecha de Nacimiento</InputLabel>
+                                <TextInput
+                                    type="date"
+                                    value={data.birthday}
+                                    onChange={(e) =>
+                                        setData("birthday", e.target.value)
+                                    }
+                                    className="mt-1 block w-full"
+                                />
+                                <InputError
+                                    className="mt-2"
+                                    message={errors.birthday}
+                                />
+                            </div>
+                        </div>
+
+                        <div className="mt-6 flex justify-end">
+                            <PrimaryButton processing={processing}>
+                                {iseditable
+                                    ? "Editar Cliente"
+                                    : "Nuevo Cliente"}
+                            </PrimaryButton>
+                        </div>
+                    </form>
+                </Section>
+            </div>
         </AuthenticatedLayout>
     );
 };
