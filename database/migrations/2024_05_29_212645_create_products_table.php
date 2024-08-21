@@ -13,6 +13,15 @@ return new class extends Migration
     {
         Schema::create('products', function (Blueprint $table) {
             $table->id();
+            $table->string('nameProduct')->unique();
+            $table->text('description')->nullable(true);
+            $table->decimal('price', 8, 2);
+            $table->decimal("costo_produccion");
+            $table->decimal("costoProduccionExtra")->nullable();
+            $table->decimal("costoExterno")->nullable();
+            $table->enum('status',["Activo","Inactivo"])->default("Activo");
+            $table->unsignedBigInteger('category_id');
+            $table->foreign('category_id')->references('id')->on('categories')->onDelete('cascade');
             $table->timestamps();
         });
     }
