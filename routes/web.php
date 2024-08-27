@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\AsignacionController;
 use App\Http\Controllers\CategoriaController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\ClientController;
@@ -69,6 +70,7 @@ Route::middleware('auth')->group(function(){
 
 Route::middleware('auth')->group(function(){
     Route::get('/corteConfeccion',[CorteConfeccionController::class,'index'])->name('corteConfeccion.index');
+    Route::get("/asignacion",[AsignacionController::class,'index'])->name("asignacion.index");
    /*  Route::get('/employees/create',[EmpleadoController::class,'create'])->name('employees.create');
     Route::post('/employees/store',[EmpleadoController::class,'store'])->name('employees.store');
     Route::get('/employees/{id}/edit',[EmpleadoController::class,'edit'])->name('employees.edit');
@@ -77,21 +79,22 @@ Route::middleware('auth')->group(function(){
 
 Route::middleware('auth')->group(function(){
     Route::get('/ordenes',[CorteConfeccionController::class,'index'])->name('ordenes.index');
+ 
    /*  Route::get('/employees/create',[EmpleadoController::class,'create'])->name('employees.create');
     Route::post('/employees/store',[EmpleadoController::class,'store'])->name('employees.store');
     Route::get('/employees/{id}/edit',[EmpleadoController::class,'edit'])->name('employees.edit');
-   Route::put('/employees/{empleado}',[EmpleadoController::class,'update'])->name('employees.update');    */
+       */
 });
 
 Route::middleware('auth')->group(function(){
     Route::get('/crear-pedidos',[PedidoController::class,'index'])->name('pedidos.index');
     Route::put('/pedido/{idpedido}',[PedidoController::class,'submit'])->name('pedido.submit');
-    Route::get("/pedido",function(){
-echo "Pedido Send";
-    })->name("pedido.send");
+    Route::get("/pedido",[PedidoController::class,'submited'])->name("pedido.send");
     Route::post("/store",[PedidoController::class,"store"])->name("pedido.store");
+    Route::get("/order/{order}/edit",[OrderController::class,"edit"])->name("order.edit");
     Route::get('/order/{pedido}',[OrderController::class,'index'])->name('order.index');
     Route::post('/order/{pedido}',[OrderController::class,'store'])->name('order.store');
+    Route::put('/orden/{order}',[OrderController::class,'update'])->name('orden.update');
 });
 
 require __DIR__.'/auth.php';
