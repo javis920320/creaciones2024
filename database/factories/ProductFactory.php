@@ -18,13 +18,17 @@ class ProductFactory extends Factory
     public function definition(): array
     {
         return [
-            'name' => $this->faker->word,
+            'nameProduct' => $this->faker->unique->name(),
             'description' => $this->faker->sentence,
             'price' => $this->faker->randomFloat(2, 1, 100),
             'category_id' => Category::factory(),
-            'size' => $this->faker->randomElement(['S', 'M', 'L', 'XL']),
-            'color' => $this->faker->colorName,
-            'stock' => $this->faker->numberBetween(0, 100),
+            //"price"=>$this->faker->numberBetween(3000,10000),
+            "costo_produccion"=>$this->faker->numberBetween(3000,10000),
+            "costoProduccionExtra"=>$this->faker->numberBetween(3000,10000),
+            "costoExterno"=>$this->faker->numberBetween(3000,10000),
+           // 'size' => $this->faker->randomElement(['S', 'M', 'L', 'XL']),
+           // 'color' => $this->faker->colorName,
+            //'stock' => $this->faker->numberBetween(0, 100),
         ];
     }
 }

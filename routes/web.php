@@ -47,6 +47,8 @@ Route::middleware('auth')->group(function(){
 });
 Route::middleware('auth')->group(function(){
     Route::get('/products/',[ProductController::class,'index'])->name('products.index');
+    Route::get('productos/{category}',[ProductController::class, "list"])->name("products.list");
+
     Route::get('/product/{idproduct}/edit',[ProductController::class,'edit'])->name('product.edit');
     Route::put('/product/{idProducto}',[ProductController::class,'update'])->name('product.update');
     Route::get('/product/create',[ProductController::class,'create'])->name('product.create');
@@ -71,6 +73,14 @@ Route::middleware('auth')->group(function(){
 Route::middleware('auth')->group(function(){
     Route::get('/corteConfeccion',[CorteConfeccionController::class,'index'])->name('corteConfeccion.index');
     Route::get("/asignacion",[AsignacionController::class,'index'])->name("asignacion.index");
+    Route::get("/asignacion/{pedido}/create",[AsignacionController::class,'create'])->name("asignacion.create");
+    Route::get("/asignacion/{orden}",[AsignacionController::class,"show"])->name("asignacion.listar");
+    Route::post("asignacion/create",[AsignacionController::class,"store"])->name("asignacion.store");
+
+
+    Route::get("/asignacion/listar/{orden}",[AsignacionController::class,"asignacionorden"])->name("asignacion.listado");
+    Route::delete("/asignacion/{asignacion}",[AsignacionController::class,"destroy"])->name("asignacion.delete");
+    //Route::get("/asignacion/{listar}",[AsignacionController::class,"asignacionorden"])->name("asignacion.listado");
    /*  Route::get('/employees/create',[EmpleadoController::class,'create'])->name('employees.create');
     Route::post('/employees/store',[EmpleadoController::class,'store'])->name('employees.store');
     Route::get('/employees/{id}/edit',[EmpleadoController::class,'edit'])->name('employees.edit');
@@ -87,9 +97,10 @@ Route::middleware('auth')->group(function(){
 });
 
 Route::middleware('auth')->group(function(){
+    Route::get('/listar',[PedidoController::class,"list"])->name("lista.pedidos");
     Route::get('/crear-pedidos',[PedidoController::class,'index'])->name('pedidos.index');
     Route::put('/pedido/{idpedido}',[PedidoController::class,'submit'])->name('pedido.submit');
-    Route::get("/pedido",[PedidoController::class,'submited'])->name("pedido.send");
+    Route::get("/pedido/{pedidoenviado}",[PedidoController::class,'pedidoSubmited'])->name("pedido.send");
     Route::post("/store",[PedidoController::class,"store"])->name("pedido.store");
     Route::get("/order/{order}/edit",[OrderController::class,"edit"])->name("order.edit");
     Route::get('/order/{pedido}',[OrderController::class,'index'])->name('order.index');
