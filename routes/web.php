@@ -2,6 +2,8 @@
 
 use App\Http\Controllers\AsignacionController;
 use App\Http\Controllers\CategoriaController;
+use App\Http\Controllers\DashBoardController;
+use App\Http\Controllers\DownloadPdfController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\ClientController;
 use App\Http\Controllers\CorteConfeccionController;
@@ -9,6 +11,7 @@ use App\Http\Controllers\EmpleadoController;
 use App\Http\Controllers\OrderController;
 use App\Http\Controllers\PedidoController;
 use App\Http\Controllers\ProductController;
+use App\Http\Controllers\ProductImageController;
 use App\Models\Client;
 use App\Models\Empleado;
 use App\Models\Product;
@@ -25,18 +28,24 @@ Route::get('/', function () {
     ]);
 });
 
-Route::get('/dashboard', function () {
-  $empleados = Empleado::all();
-  $clientes=Client::all();
-  $products=Product::all();
-    return Inertia::render('Dashboard',["clientes"=>count($clientes),"empleados"=>count($empleados),"products"=>count($products)]);
-})->middleware(['auth', 'verified'])->name('dashboard');
 
 Route::middleware('auth')->group(function () {
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
+    Route::get("/dashboard",[DashBoardController::class,"index"])->name("dashboard");
 });
+
+
+/* Route::get('/dashboard', function () {
+    $empleados = Empleado::all();
+    $clientes=Client::all();
+    $products=Product::all();
+      return Inertia::render('Dashboard',["clientes"=>count($clientes),"empleados"=>count($empleados),"products"=>count($products)]);
+  })->middleware(['auth', 'verified'])->name('dashboard'); */
+  
+
+// Modulos  Completos de forma Basica con Tareas avanzadas Pendientes para mejorar
 Route::middleware('auth')->group(function(){
     Route::get('/clients',[ClientController::class,'index'])->name('clients.index');
     Route::get('/clients/{client}/edit',[ClientController::class,'edit'])->name('clients.edit');
@@ -44,22 +53,6 @@ Route::middleware('auth')->group(function(){
     Route::get('/client/create',[ClientController::class,'create'])->name('client.create');
     Route::post('/client/store',[ClientController::class,'store'])->name('client.store');
     Route::get("/findClient/{query}",[ClientController::class,"serchClient"])->name("client.search");
-});
-Route::middleware('auth')->group(function(){
-    Route::get('/products/',[ProductController::class,'index'])->name('products.index');
-    Route::get('productos/{category}',[ProductController::class, "list"])->name("products.list");
-
-    Route::get('/product/{idproduct}/edit',[ProductController::class,'edit'])->name('product.edit');
-    Route::put('/product/{idProducto}',[ProductController::class,'update'])->name('product.update');
-    Route::get('/product/create',[ProductController::class,'create'])->name('product.create');
-    Route::post('/produc/store',[ProductController::class,'store'])->name('product.store');
-});
-
-Route::middleware('auth')->group(function(){
-    Route::get('/categorias',[CategoriaController::class,'index'])->name('categoria.index');
-    Route::get("/categorias/{categoria}",[CategoriaController::class,'edit'])->name('categoria.edit');
-    Route::post('/categorias',[CategoriaController::class,'store'])->name('categoria.store');
-    Route::put("/categorias/{categoria}",[CategoriaController::class,'update'])->name('categoria.update');   
 });
 
 Route::middleware('auth')->group(function(){
@@ -70,30 +63,59 @@ Route::middleware('auth')->group(function(){
    Route::put('/employees/{empleado}',[EmpleadoController::class,'update'])->name('employees.update');   
 });
 
+
 Route::middleware('auth')->group(function(){
-    Route::get('/corteConfeccion',[CorteConfeccionController::class,'index'])->name('corteConfeccion.index');
+    Route::get('/categorias',[CategoriaController::class,'index'])->name('categoria.index');
+    Route::get("/categorias/{categoria}",[CategoriaController::class,'edit'])->name('categoria.edit');
+    Route::post('/categorias',[CategoriaController::class,'store'])->name('categoria.store');
+    Route::put("/categorias/{categoria}",[CategoriaController::class,'update'])->name('categoria.update');   
+});
+
+
+// Modulos  Completos de forma Basica con Tareas avanzadas Pendientes para mejorar
+
+Route::middleware('auth')->group(function(){
+    Route::get('/products/',[ProductController::class,'index'])->name('products.index');
+    Route::get('/products/{category}',[ProductController::class, "list"])->name("products.list");
+    Route::get("/productos/{categoria}",[ProductController::class,"productoconcategoria"])->name("productos.categoria");
+
+    Route::get('/product/{idproduct}/edit',[ProductController::class,'edit'])->name('product.edit');
+    Route::put('/product/{idProducto}',[ProductController::class,'update'])->name('product.update');
+    Route::get('/product/create',[ProductController::class,'create'])->name('product.create');
+    Route::post('/produc/store',[ProductController::class,'store'])->name('product.store');
+    Route::post("/product/image",[ProductImageController::class,"store"])->name("product.image");
+    Route::delete("/product/image",[ProductImageController::class,"destroy"])->name("delete.image");
+});
+
+
+Route::middleware('auth')->group(function(){
+    
+    
     Route::get("/asignacion",[AsignacionController::class,'index'])->name("asignacion.index");
     Route::get("/asignacion/{pedido}/create",[AsignacionController::class,'create'])->name("asignacion.create");
     Route::get("/asignacion/{orden}",[AsignacionController::class,"show"])->name("asignacion.listar");
     Route::post("asignacion/create",[AsignacionController::class,"store"])->name("asignacion.store");
-
-
     Route::get("/asignacion/listar/{orden}",[AsignacionController::class,"asignacionorden"])->name("asignacion.listado");
     Route::delete("/asignacion/{asignacion}",[AsignacionController::class,"destroy"])->name("asignacion.delete");
-    //Route::get("/asignacion/{listar}",[AsignacionController::class,"asignacionorden"])->name("asignacion.listado");
-   /*  Route::get('/employees/create',[EmpleadoController::class,'create'])->name('employees.create');
-    Route::post('/employees/store',[EmpleadoController::class,'store'])->name('employees.store');
-    Route::get('/employees/{id}/edit',[EmpleadoController::class,'edit'])->name('employees.edit');
-   Route::put('/employees/{empleado}',[EmpleadoController::class,'update'])->name('employees.update');    */
+    
 });
+
+
+
+Route::middleware('auth')->group(function(){
+    Route::get('/corteConfeccion',[CorteConfeccionController::class,'index'])->name('corteConfeccion.index');
+    Route::get("/getpedidos",[CorteConfeccionController::class,"getPedidos"])->name("pedidosEnviado.get");
+    Route::post('/pedidos/imprimir', [PedidoController::class, 'imprimir'])->name('pedidos.imprimir');
+    Route::get("/corteConfeccion/editar/{pedido}",[PedidoController::class,"edit"])->name("editar.envio");
+   // Route::get("/generate/ticket",[DownloadPdfController::class,"generarTickets"])->name("generate.pdf");
+
+    
+
+});
+
 
 Route::middleware('auth')->group(function(){
     Route::get('/ordenes',[CorteConfeccionController::class,'index'])->name('ordenes.index');
- 
-   /*  Route::get('/employees/create',[EmpleadoController::class,'create'])->name('employees.create');
-    Route::post('/employees/store',[EmpleadoController::class,'store'])->name('employees.store');
-    Route::get('/employees/{id}/edit',[EmpleadoController::class,'edit'])->name('employees.edit');
-       */
 });
 
 Route::middleware('auth')->group(function(){
@@ -103,9 +125,14 @@ Route::middleware('auth')->group(function(){
     Route::get("/pedido/{pedidoenviado}",[PedidoController::class,'pedidoSubmited'])->name("pedido.send");
     Route::post("/store",[PedidoController::class,"store"])->name("pedido.store");
     Route::get("/order/{order}/edit",[OrderController::class,"edit"])->name("order.edit");
-    Route::get('/order/{pedido}',[OrderController::class,'index'])->name('order.index');
+    Route::get('/order/{pedido}',[OrderController::class,'index'])->name('order.index');//usar para editar pedidos
     Route::post('/order/{pedido}',[OrderController::class,'store'])->name('order.store');
     Route::put('/orden/{order}',[OrderController::class,'update'])->name('orden.update');
+    Route::post("/pedido/enviarProduccion",[PedidoController::class,"enviarAProduccion"])->name( "pedidos.produccion");
+
+    Route::get("/pedido/{pedido}/cancelar",[PedidoController::class,"show"])->name("pedido.cancelar");
+    Route::put("/pedido/{pedido}/cancelar",[PedidoController::class,"cancelar_pedido" ])->name("cancelar.pedido");
+
 });
 
 require __DIR__.'/auth.php';

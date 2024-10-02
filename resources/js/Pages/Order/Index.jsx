@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useRef } from "react";
 import AuthenticatedLayout from "@/Layouts/AuthenticatedLayout";
 import { Head, useForm, Link } from "@inertiajs/react";
 import Section from "@/Components/Section";
@@ -30,7 +30,8 @@ const tallas = [
     { value: "XXL", label: "XXL" },
 ];
 
-const Index = ({ auth, categorias, pedido, ordenes }) => {
+const Index = ({ auth, categorias, pedido, ordenes,iseditable=false }) => {
+    const editable=useRef(iseditable)
     const { data, setData, post, errors,put } = useForm({});
   const handleSend=(e)=>{
     e.preventDefault();
@@ -50,7 +51,7 @@ const Index = ({ auth, categorias, pedido, ordenes }) => {
             user={auth.user}
             header={
                 <h2 className="font-semibold text-xl text-gray-800 dark:text-gray-200 leading-tight">
-                    Crear Pedidos
+                    {iseditable?"Editar Pedido":"Crear Pedido"}
                 </h2>
             }
         >
@@ -58,8 +59,8 @@ const Index = ({ auth, categorias, pedido, ordenes }) => {
 
             <div className="flex gap-2 ">
                 <Section className="w-1/2">
-                    <h1 className="text-gray-200 my-4">Order Request Form</h1>
-                    <p className="text-gray-300">
+                
+                    <p className="text-gray-500 dark:text-gray-700">
                         Complete el formulario para realizar su pedido.
                     </p>
                     <form onSubmit={handleSubmit}>
@@ -90,6 +91,16 @@ const Index = ({ auth, categorias, pedido, ordenes }) => {
                                     className="w-full"
                                     onChange={(e) =>
                                         setData("producto", e.target.value)
+                                    }
+                                ></TextInput>
+                            </div>
+                            <div className="w-1/2">
+                                <InputLabel>Facultad </InputLabel>
+                                <TextInput
+                                    required
+                                    className="w-full"
+                                    onChange={(e) =>
+                                        setData("facultad", e.target.value)
                                     }
                                 ></TextInput>
                             </div>
@@ -167,12 +178,13 @@ const Index = ({ auth, categorias, pedido, ordenes }) => {
                             Ordenes Pendientes
                         </h1>
                         {ordenes ? (
-                            <List ordenes={ordenes}/>
+                            <List ordenes={ordenes} iseditable={iseditable}/>
                         ) : (
                             <h2>No hay ordenes pendientes</h2>
                         )}
                     </Section>
                     <div className="w-1/2">
+                    {!iseditable?(
                     <form onSubmit={handleSend} className="flex">
                     <InputLabel>Estado del Pedido</InputLabel>
                         <SelectList
@@ -188,13 +200,12 @@ const Index = ({ auth, categorias, pedido, ordenes }) => {
                         </SelectList>
                         <SecondaryButton type="submit">Enviar A:</SecondaryButton>
                     </form>
-                        
+                        ):<Link href={route("corteConfeccion.index")}>Volver a lista</Link>}
+
+                        {JSON.stringify(editable)}
                     </div>
                 </div>
 
-                {/* <Link href={route("pedidos.submit", pedido.data[0].id)}>
-                    <SecondaryButton> Enviar a produccion </SecondaryButton>
-                </Link> */}
             </div>
         </AuthenticatedLayout>
     );

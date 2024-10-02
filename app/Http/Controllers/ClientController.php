@@ -35,7 +35,7 @@ class ClientController extends Controller
     public function store(Request $request)
     {
         // Validar los datos de la solicitud
-        
+
         $validatedData = $request->validate([
             'full_name' => 'required|string|max:255',
             'email' => 'required|string|max:255|unique:clients',
@@ -46,15 +46,15 @@ class ClientController extends Controller
             'postal_code' => 'nullable|string|max:20',
             'country' => 'nullable|string|max:255',
             'birthday' => 'nullable|date',
-            'identification_number' => 'nullable|string|max:255|unique:clients',
+            'identification_number' =>'required|string|max:20|min:5|unique:clients|regex:/^[A-Za-z0-9]+$/',
             'gender' => 'nullable|in:male,female,other',
             'notes' => 'nullable|string',
             'status' => 'nullable|in:active,inactive',
         ]);
-    
+
         // Crear el nuevo cliente
         $newClient = Client::create($validatedData);
-    
+
         // Verificar si la solicitud es AJAX (por ejemplo, a través de Axios)
         if ($request->wantsJson()) {
             return response()->json([
@@ -63,7 +63,7 @@ class ClientController extends Controller
                 'client' => $newClient,
             ]);
         }
-    
+
         // Para solicitudes normales (Inertia.js, por ejemplo)
         return redirect()->route('clients.index')
             ->with('success', 'Cliente creado exitosamente.');
@@ -106,7 +106,7 @@ class ClientController extends Controller
             'postal_code' => 'nullable|string|max:20',
             'country' => 'nullable|string|max:255',
             'birthday' => 'nullable|date',
-            'identification_number' => 'required|string|max:255|unique:clients,'.$idclient->id,
+            'identification_number' =>'required|string|max:20|min:5|unique:clients|regex:/^[A-Za-z0-9]+$/',
             'gender' => 'nullable|in:male,female,other',
             'notes' => 'nullable|string',
             'status' => 'nullable|in:active,inactive',
@@ -116,9 +116,10 @@ class ClientController extends Controller
         if ($idclient->update($validatedData)) {
             return redirect()->route('clients.index', $idclient->id)
                 ->with('success', 'Client updated successfully.');
-        };
+        }
+        ;
 
-        
+
 
 
 
@@ -132,13 +133,18 @@ class ClientController extends Controller
         //
     }
 
-    public  function serchClient($query)
+    public function serchClient($query)
     {
-        $cliente = Client::where("full_name", $query)->get();
+  try {
+    $cliente = Client::where("identification_number", $query)->limit(1)->get();
 
         if (!$cliente) {
             return response()->json(["error" => " client not found "]);
         }
         return response()->json($cliente);
+  } catch (\Throwable $th) {
+    return response()->json(["error" => " Error internal server "]);
+  }
+        
     }
 }

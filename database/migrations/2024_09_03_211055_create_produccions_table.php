@@ -11,8 +11,12 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('employs', function (Blueprint $table) {
+        Schema::create('produccions', function (Blueprint $table) {
             $table->id();
+            $table->unsignedInteger("pedido_id");
+
+            $table->enum("estado",["procesado","sin procesar","cancelado"]);
+            //$table->foreign('empleado_id')->references('id')->on('empleados')->onDelete('cascade');
             $table->timestamps();
         });
     }
@@ -22,6 +26,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('employs');
+        Schema::dropIfExists('produccions');
     }
 };

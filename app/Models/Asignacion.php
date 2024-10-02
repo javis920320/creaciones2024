@@ -9,7 +9,7 @@ class Asignacion extends Model
 {
     use HasFactory;
 
-    protected $fillable = ["empleado_id","order_id","fecha_asignacion","estado","cantidad","costo","tipocosto"];
+    protected $fillable = ["empleado_id","order_id","fecha_asignacion","estado","cantidad","costo","tipocosto","precio"];
 
 public function empleado(){
     return $this->belongsTo(Empleado::class);

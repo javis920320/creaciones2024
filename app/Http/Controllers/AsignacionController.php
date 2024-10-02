@@ -63,12 +63,16 @@ class AsignacionController extends Controller
         ]);
 
         $order = Order::find($request->order_id);
+        
         //verificar si existe la orden
         if (!$order) {
             return redirect()->back()->with("error", "La orden no existe");
         }
 
-        $limitcantidad = $order->cantidad;
+
+        $limitcantidad = (int)$order->cantidad ;
+        
+
 
         $ordenesOcupadas = Asignacion::where("order_id", $request->order_id)->sum("cantidad");
 
@@ -78,7 +82,7 @@ class AsignacionController extends Controller
             return redirect()->back()->with("error", "La cantidad solicitada excede la cantidad disponible.");
         }
 
-
+        
 
         // Validar los campos del formulario
         $validaciones = $request->validate([
@@ -95,8 +99,10 @@ class AsignacionController extends Controller
 
 
         $producto = Product::where("id", $request->producto)->first();
+        
 
         $precioProducto = $this->calcularPrecioProducto($producto, $validaciones["tipocosto"]);
+
 
 
         // Crear la asignación con los datos validados
@@ -110,15 +116,24 @@ class AsignacionController extends Controller
             //calculo de costos
             'costo' => $validaciones['cantidad'] * $precioProducto,
             'estado' => $validaciones['estado'],
+            "precio"=>$producto->price*$validaciones["cantidad"],
         ]);
 
+        
         $totalAsignado = Asignacion::where("order_id", $request->order_id)->sum("cantidad");
-        if ($totalAsignado >= $limitcantidad) {
-
+        
+        if ($totalAsignado === $limitcantidad) {
+            
             $order->estado = 'completado';
             $order->save();
+            if($order->pedido->verificarEstado()){
+                
+                //$precio=Asignacion::where("pedido_id",$order->pedidoId)->sum("precio");
 
-            $order->pedido->verificarEstado();
+                $precio=$order->pedido()->with("asignacions")->sum("precio");
+                dd($precio);
+                $order->pedido->enviarACobro($order->pedidoId,$precio);
+            };
 
 
 

@@ -14,12 +14,12 @@ return new class extends Migration
         Schema::create('cobros', function (Blueprint $table) {
             $table->id();
             $table->timestamps();
-            $table->unsignedBigInteger('order_id');
+            $table->unsignedBigInteger('pedido_id');
             $table->decimal('monto',10,2);
             $table->date("fechacobro");
-            $table->date("fechavencimiento");
+            $table->date("fechavencimiento")->nullable();
             $table->enum('estado', ['pendiente','pagado','vencido'])->default('pendiente');
-            $table->foreign('order_id')->references('id')->on("order")->onDelete("cascade");
+            $table->foreign('pedido_id')->references('id')->on("pedidos")->onDelete("cascade");
         });
     }
 

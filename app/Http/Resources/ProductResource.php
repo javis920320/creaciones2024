@@ -2,6 +2,7 @@
 
 namespace App\Http\Resources;
 
+use App\Models\Product_image;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
 
@@ -28,6 +29,7 @@ class ProductResource extends JsonResource
             "costoExterno"=>$this->costoExterno,
             "status"=>$this->status,
             "description"=>$this->description,
+            "images"=>Product_image::where("product_id",$this->id)->get()//$this->imagenes()
 
         ];
     }

@@ -47,7 +47,7 @@ const Index = ({ auth, empleados = null }) => {
                     <tbody className="dark:to-blue-950 ">
                         {empleados ? (
                             empleados.data.map((empleado) => (
-                                <tr className="p-4 text-gray-400">
+                                <tr key={empleado.id} className="p-4 text-gray-400">
                                     <td className="px-3 py-2">
                                         {empleado.nombreCompleto}
                                     </td>

@@ -14,7 +14,7 @@ class EmpleadoController extends Controller
     public function index()
     {
        $data= Empleado::query();
-       $empleados=$data->paginate(10)->onEachSide(1);
+       $empleados=$data->paginate(100)->onEachSide(1);
        //dd($empleados);
 
 

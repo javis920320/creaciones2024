@@ -18,6 +18,7 @@ return new class extends Migration
             $table->integer("cantidad");
             $table->date("fecha_asignacion");
             $table->decimal("costo",10, 2);
+            $table->decimal("precio",10, 2);
             $table->string("tipocosto");
             $table->enum("estado",["asignado","terminado"])->default("asignado");
             $table->foreign('empleado_id')->references('id')->on('empleados')->onDelete('cascade');

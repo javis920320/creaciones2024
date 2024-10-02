@@ -36,6 +36,7 @@ const Edit = ({ auth, order, categorias }) => {
         talla: order?.talla || "",
         descripcion: order?.descripcion || "",
         precioUnitario: order?.precioUnitario || "",
+        facultad:order?.facultad|| "",
     });
 
     const handleSubmit = (e) => {
@@ -59,9 +60,9 @@ const Edit = ({ auth, order, categorias }) => {
                     <h1 className="text-capitalize p-2 text-center">
                         Editar Orden{" "}
                     </h1>
-                    <p></p>
+                    
                     <form onSubmit={handleSubmit}>
-                        {/* {JSON.stringify(order)} */}
+                        
                         <div>
                             <InputLabel>Categoria</InputLabel>
                             <SelectList
@@ -89,6 +90,16 @@ const Edit = ({ auth, order, categorias }) => {
                                 }
                             ></TextInput>
                             <InputError message={errors.producto} />
+                        </div>
+                        <div>
+                            <InputLabel>Facultad</InputLabel>
+                            <TextInput
+                                value={data.facultad}
+                                onChange={(e) =>
+                                    setData("facultad", e.target.value)
+                                }
+                            ></TextInput>
+                            <InputError message={errors.facultad} />
                         </div>
                         <div>
                             <InputLabel>Cantidad</InputLabel>

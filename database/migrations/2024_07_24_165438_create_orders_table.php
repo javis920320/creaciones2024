@@ -20,7 +20,8 @@ return new class extends Migration
             $table->text("descripcion");
             $table->string("talla");
             $table->string("cantidad");
-            $table->string("precioUnitario");
+            $table->string("facultad");
+            $table->string("precioUnitario")->nullable();
             $table->string("estado");
             $table->foreign("pedidoId")->references("id")->on("pedidos")->onDelete("cascade");
 

@@ -17,7 +17,7 @@ class AsignacionResource extends JsonResource
         
         return [
             "id"=> $this->id,
-            "empleado_id" => $this->empleado,
+            "empleado" => $this->empleado,
             "order_id"=>$this->order_id,            
             "fecha_asignacion"=>$this->fecha_asignacion,
             "estado"=>$this->estado,

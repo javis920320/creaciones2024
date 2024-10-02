@@ -50,7 +50,8 @@ class OrderController extends Controller
             "talla" => "required",
             "cantidad" => "required|min:1",
             "precioUnitario" => "nullable",
-            "descripcion" => "required"
+            "descripcion" => "required",
+
         ]);
       
 
@@ -63,6 +64,8 @@ class OrderController extends Controller
         $nuevaOrden->precioUnitario = $request->precioUnitario;
         $nuevaOrden->pedidoId = $request->pedidoId;
         $nuevaOrden->estado = "creado";
+        $nuevaOrden->facultad= $request->facultad;
+
         $resp = $nuevaOrden->save();
 
         if ($resp) {
@@ -115,9 +118,12 @@ class OrderController extends Controller
        $order->cantidad=$request->cantidad;
        $order->precioUnitario=$request->precioUnitario;
        $order->descripcion=$request->descripcion;
+       $order->facultad=$request->facultad;
+
        
 
         $order->update();
+
         return redirect()->route("order.index",$order->pedidoId);
 
 

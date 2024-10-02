@@ -57,7 +57,7 @@ const Create = ({ auth, client = null }) => {
                 <Section>
                     
                     <form onSubmit={HandleSubmit}>
-                        {JSON.stringify(errors)}
+                        
                         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                             <div>
                                 <InputLabel>Nombre Completo</InputLabel>
@@ -79,6 +79,7 @@ const Create = ({ auth, client = null }) => {
                             <div>
                                 <InputLabel>Identificación</InputLabel>
                                 <TextInput
+                                type="number"
                                 value={data.identification_number}
                                     onChange={(e) =>
                                         setData(
@@ -97,6 +98,7 @@ const Create = ({ auth, client = null }) => {
                             <div>
                                 <InputLabel>Celular</InputLabel>
                                 <TextInput
+                                type="number"
                                 value={data.phone}
                                     onChange={(e) =>
                                         setData("phone", e.target.value)

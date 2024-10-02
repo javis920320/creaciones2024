@@ -28,6 +28,7 @@ class OrderFactory extends Factory
             "cantidad"=>$this->faker->numberBetween(1,10),
             "precioUnitario"=> $this->faker->numberBetween(2000,40000),
             "estado"=> $this->faker->randomElement(["creado","pendiente"]),
+            "facultad"=>$this->faker->word()
         ];
     }
 }

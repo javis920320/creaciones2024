@@ -1,7 +1,7 @@
 import { Link } from '@inertiajs/react'
 import React from 'react'
 
-const List = ({ordenes}) => {
+const List = ({ordenes,iseditable}) => {
   return (
     <table className="w-full text-sm text-left rtl:text:rigth text-gray-500 dark:text-gray-400">
                                     <thead className="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400 border-b-2 border-gray-500">
@@ -11,6 +11,9 @@ const List = ({ordenes}) => {
                                             </th>
                                             <th className="px-3 py-2">
                                                 Producto
+                                            </th>
+                                            <th className="px-3 py-2">
+                                                Facultad
                                             </th>
                                             <th className="px-3 py-2">
                                                 Cantidad
@@ -29,11 +32,13 @@ const List = ({ordenes}) => {
                                         </tr>
                                     </thead>
                                     <tbody>
+                                        
                                         {ordenes.data.map(
                                             ({
                                                 id,
                                                 categoria,
                                                 producto,
+                                                facultad,
                                                 cantidad,
                                                 talla,
                                                 descripcion,
@@ -47,6 +52,7 @@ const List = ({ordenes}) => {
                                                         }
                                                     </td>
                                                     <td>{producto}</td>
+                                                    <td>{facultad}</td>
                                                     <td>{cantidad}</td>
                                                     <td>{talla}</td>
                                                     <td>{descripcion}</td>

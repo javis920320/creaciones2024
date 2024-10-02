@@ -1,47 +1,58 @@
-import React from 'react'
+import CalendarIcon from "@/Icons/CalendarIcon";
+import MailIcon from "@/Icons/MailIcon";
+import PhoneIcon from "@/Icons/PhoneIcon";
+import TruckIcon from "@/Icons/TruckIcon";
+import UserIcon from "@/Icons/UserIcon";
+import { Badge } from "@mui/material";
+import React from "react";
 
-const Infoclients = ({pedido}) => {
-  return (
-    <>
-    <div className=" w-10/12  text-gray-300 flex justify-between">
-                            <p className="text-xl">
-                                Codigo: {pedido.data[0].id}
-                            </p>
-                            <h2 className="text-xl">
-                                Factura :{pedido.data[0].factura}
-                            </h2>
-                        </div>
+const Infoclients = ({ pedido }) => {
+     const {cliente,factura,id,created_at,status,envioDomicilio}= pedido.data[0]
+    return (
+        <>
+            <div className="flex justify-between items-center">
+                <span className="font-semibold">Código:</span>
+                <span>{id}</span>
+            </div>
+            <div className="flex justify-between items-center">
+                <span className="font-semibold">Factura:</span>
+                <span>{factura}</span>
+            </div>
+            <div className="flex items-center gap-2">
+                <UserIcon className="h-4 w-4" />
+                <span className="font-semibold">Nombre Cliente:</span>
+                <span>{cliente.full_name}</span>
+            </div>
+            <div className="flex items-center gap-2">
+                <span className="font-semibold">Identificación:</span>
+                <span>{cliente.identification_number}</span>
+            </div>
+            <div className="flex items-center gap-2">
+                <MailIcon className="h-4 w-4" />
+                <span className="font-semibold">Email:</span>
+                <span>{cliente.email}</span>
+            </div>
+            <div className="flex items-center gap-2">
+                <PhoneIcon className="h-4 w-4" />
+                <span className="font-semibold">Teléfono:</span>
+                <span>{cliente.phone}</span>
+            </div>
+            <div className="flex items-center gap-2">
+                <CalendarIcon className="h-4 w-4" />
+                <span className="font-semibold">Fecha y hora de creación:</span>
+                <span>{created_at}</span>
+            </div>
+            <div className="flex items-center gap-2">
+                <span className="font-semibold">Estado:{status}</span>
+                <Badge variant="secondary">Pedido creado</Badge>
+            </div>
+            <div className="flex items-center gap-2">
+                <TruckIcon className="h-4 w-4" />
+                <span className="font-semibold">Envío Domicilio:</span>
+                <span>{envioDomicilio?"Domicilio solicitado":"No solicitado"}</span>
+            </div>
+        </>
+    );
+};
 
-                        <div className="text-gray-400 uppercase">
-                            <p>
-                                Nombre Cliente:
-                                {pedido.data[0].cliente.full_name}
-                            </p>
-                            <p>
-                                Identificacion :
-                                {pedido.data[0].cliente.identification_number}
-                            </p>
-                            <p>Email :{pedido.data[0].cliente.email}</p>
-                            <p>Telefono :{pedido.data[0].cliente.phone}</p>
-                        </div>
-
-                        <div className="flex gap-6 text-gray-500">
-                            <p>
-                                Fecha y hora de creacion :
-                                {pedido.data[0].created_at}
-                            </p>
-                            <p>Estado:{pedido.data[0].estado}</p>
-                        </div>
-                        <div className="flex gap-6 text-gray-500">
-                            <p>
-                                Envio Domicilio :
-                                {pedido.data[0].envioDomicilio
-                                    ? "Activo"
-                                    : "No Solicitado"}
-                            </p>
-                        </div>
-                        </>
-  )
-}
-
-export default Infoclients
+export default Infoclients;

@@ -24,29 +24,40 @@ class Pedido extends Model
     public function verificarEstado()
     {
         if ($this->ordenes()->where("estado", "creado")->count() === 0) {
-            //dd($this->id);
+            
             $this->estado = "Pedido confirmado";
             $this->save();
-           // $this->enviarACobro();
+            return true;
+           //$this->enviarACobro();
         }
+        return false;
     }
-    public function enviarACobro()
+    public function enviarACobro($pedido_id,$precio)
     {
 
-        dd($this);
+     
         Cobro::create([
-            "id" => $this->id,
-            "order_id" => $this->order_id,
-            "monto" => $this->calcularMonto(),
+            "pedido_id" => $pedido_id,
+            "monto" => $precio,
             "fechacobro" => Carbon::now(),
-            "fechavecimiento" => $this->fecha,
+            "fechavecimiento" => null,
             "estado" => "pendiente",
 
         ]);
+    }
+    public function enviaraProduccion(){
+        $this->estado = 'Producción en curso';
+        //$this->fechaProduccion = Carbon::now();
+        
+        // Guardar el cambio en la base de datos
+        $this->save();
     }
 
     public function calcularMonto()
     {
         return $this->items->sum('precio');
+    }
+    public function historial(){
+        return $this->hasMany(HistorialImpresion::class,"pedido_id");
     }
 }

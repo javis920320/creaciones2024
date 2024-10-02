@@ -20,8 +20,10 @@ class PedidoResource extends JsonResource
             "fechaEntrega"=>$this->fechaEntrega,
             "factura"=>$this->factura,
             "cliente"=>$this->cliente,
+            "ordenes"=>$this->ordenes,
             "estado"=>$this->estado,
             "envioDomicilio"=>$this->envioDomicilio,
+            "impresiones"=>$this->historial,
             "created_at"=> ( new Carbon($this->created_at))->format("Y-m-d H:i"),
 
         ];

@@ -22,6 +22,7 @@ class OrdenResource extends JsonResource
             "talla"=>$this->talla,
             "descripcion"=>$this->descripcion,
             "precioUnitario"=>$this->precioUnitario,
+            "facultad"=>$this->facultad,
             "categoria"=>Category::where("id",$this->categoriaId)->get()
         ];
     }
