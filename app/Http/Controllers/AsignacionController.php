@@ -14,6 +14,7 @@ use Carbon\Traits\ToStringFormat;
 use Date;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
+use Log;
 
 class AsignacionController extends Controller
 {
@@ -26,8 +27,9 @@ class AsignacionController extends Controller
 
         $pedidos = Pedido::where("estado", "Producción en curso")->paginate(20);
 
-        return Inertia("Pedidos/Asignacion", [
+        return Inertia::render("Pedidos/Asignacion", [
             "pedidos" => PedidoResource::collection($pedidos)
+            //"pedidos"=>$pedidos
         ]);
     }
 
@@ -57,57 +59,120 @@ class AsignacionController extends Controller
      */
     public function store(Request $request)
     {
+
         $request->merge([
             'fecha_asignacion' => Carbon::now()->format('Y-m-d'),
             'estado' => "asignado"
         ]);
+        //verificar si la orden existe
+        $order = $this->findOrder($request->order_id);
 
-        $order = Order::find($request->order_id);
-        
+
         //verificar si existe la orden
         if (!$order) {
             return redirect()->back()->with("error", "La orden no existe");
         }
 
+        //Verificar si la cantidad solicitada excede la disponible
 
-        $limitcantidad = (int)$order->cantidad ;
-        
+        if ($this->verificarCantidadDisponible($request, $order)) {
 
+            return response()->json(["errors" => ["cantidad" => "la cantidad execede la cantidad disponible"]])->setStatusCode(422);
 
-        $ordenesOcupadas = Asignacion::where("order_id", $request->order_id)->sum("cantidad");
-
-
-
-        if (($ordenesOcupadas + $request->cantidad) > $limitcantidad) {
-            return redirect()->back()->with("error", "La cantidad solicitada excede la cantidad disponible.");
         }
 
-        
-
         // Validar los campos del formulario
-        $validaciones = $request->validate([
-            'empleado_id' => 'required|exists:empleados,id',
-            'order_id' => 'required|exists:orders,id',
-            "cantidad" => "required",
-            "producto" => "required",
-            'tipocosto' => 'required|in:operador_normal,hora_extra,externo_normal,sin_costo',
-            'fecha_asignacion' => 'required|date',
-            'estado' => 'required',
-            //'estado' => 'required|in:asignado,terminado',
+        $validaciones = $this->validateRequest($request);
+
+
+
+        //buscamos el producto de la orden seleccionada
+        $producto = Product::where("id", $request->producto)->first();
+
+
+
+
+        $precioProducto = $this->calcularPrecioProducto($producto, $validaciones["tipocosto"]);
+
+        $registroasign = $this->createAsignacion($validaciones, $producto, $precioProducto);
+
+        // Verificar si se ha asignado la cantidad completa y actualizar el estado de la orden/pedido
+        $this->updateOrderStatusIfCompleted($request->order_id, $order, $validaciones);
+
+
+
+        return response()->json([
+            "mensaje" => "asginacion realizada",
+            "registroasignado" => $registroasign
+
         ]);
 
 
 
-        $producto = Product::where("id", $request->producto)->first();
-        
+    }
+    public function validateRequest(Request $request)
+    {
 
-        $precioProducto = $this->calcularPrecioProducto($producto, $validaciones["tipocosto"]);
+        return $request->validate([
+            "empleado_id" => "required|exists:empleados,id",
+            'order_id' => 'required|exists:orders,id',
+            "cantidad" => "required",
+            "producto" => "required",
+            //'tipocosto' => 'required|in:operador_normal,hora_extra,externo_normal,sin_costo',
+            'tipocosto' => 'required',
+            'fecha_asignacion' => 'required|date',
+            'estado' => 'required|in:asignado,terminado',
+        ]);
+    }
+
+    public function updateOrderStatusIfCompleted($orderId, $order, $validaciones)
+    {
+
+        $totalAsignado = Asignacion::where("order_id", $orderId)->sum("cantidad");
+
+        $limitcantidad = (int) $order->cantidad;
+
+        if ($totalAsignado == $limitcantidad) {
+            
+            $order->estado = "completado";
+            $order->save();
+            $precio = Asignacion::where("order_id", $orderId)->sum("precio");
+            $order->pedido->enviarAcobro($orderId, $precio);
+
+            if ($order->pedido->verificarEstado()) {
+
+                
+                $precio = Asignacion::where("order_id", $orderId)->sum("precio");
+
+               // $order->pedido->enviarAcobro($orderId, $precio);
+
+            }
+        }
+
+    }
+    public function findOrder($orderId)
+    {
+        return Order::find($orderId);
+    }
+
+    public function verificarCantidadDisponible(Request $request, $order)
+    {
 
 
+        $limitcantidad = (int) $order->cantidad;
+
+        $ordenesOcupadas = Asignacion::where("order_id", $request->order_id)->sum("cantidad");
+
+        return ($ordenesOcupadas + $request->cantidad) > $limitcantidad;
+    }
+
+
+    public function createAsignacion($validaciones, $producto, $precioProducto)
+    {
 
         // Crear la asignación con los datos validados
 
-        $asignacion = Asignacion::create([
+        return Asignacion::create([
             'empleado_id' => $validaciones['empleado_id'],
             'order_id' => $validaciones['order_id'],
             'cantidad' => $validaciones['cantidad'],
@@ -116,36 +181,10 @@ class AsignacionController extends Controller
             //calculo de costos
             'costo' => $validaciones['cantidad'] * $precioProducto,
             'estado' => $validaciones['estado'],
-            "precio"=>$producto->price*$validaciones["cantidad"],
+            "precio" => $producto->price * $validaciones["cantidad"],
         ]);
 
-        
-        $totalAsignado = Asignacion::where("order_id", $request->order_id)->sum("cantidad");
-        
-        if ($totalAsignado === $limitcantidad) {
-            
-            $order->estado = 'completado';
-            $order->save();
-            if($order->pedido->verificarEstado()){
-                
-                //$precio=Asignacion::where("pedido_id",$order->pedidoId)->sum("precio");
-
-                $precio=$order->pedido()->with("asignacions")->sum("precio");
-                dd($precio);
-                $order->pedido->enviarACobro($order->pedidoId,$precio);
-            };
-
-
-
-        }
-
-
-        return redirect()->back()->with('success', 'Exitos');
-
-
-
     }
-
 
     private function calcularPrecioProducto($producto, $tipoCosto)
     {
@@ -214,5 +253,11 @@ class AsignacionController extends Controller
 
         return redirect()->route('asignacion.create', $asignacion->orden->pedidoId)
             ->with('success', 'Asignación eliminada exitosamente.');
+    }
+
+    public function ordenesAsignadas($orden)
+    {
+
+        return Asignacion::where("order_id", $orden)->sum("cantidad");
     }
 }

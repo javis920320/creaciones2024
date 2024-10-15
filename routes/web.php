@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\AsignacionController;
 use App\Http\Controllers\CategoriaController;
+use App\Http\Controllers\CobroController;
 use App\Http\Controllers\DashBoardController;
 use App\Http\Controllers\DownloadPdfController;
 use App\Http\Controllers\ProfileController;
@@ -12,6 +13,7 @@ use App\Http\Controllers\OrderController;
 use App\Http\Controllers\PedidoController;
 use App\Http\Controllers\ProductController;
 use App\Http\Controllers\ProductImageController;
+use App\Http\Controllers\Reports\AlmacenReportController;
 use App\Models\Client;
 use App\Models\Empleado;
 use App\Models\Product;
@@ -35,6 +37,7 @@ Route::middleware('auth')->group(function () {
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
     Route::get("/dashboard",[DashBoardController::class,"index"])->name("dashboard");
 });
+
 
 
 /* Route::get('/dashboard', function () {
@@ -66,6 +69,9 @@ Route::middleware('auth')->group(function(){
 
 Route::middleware('auth')->group(function(){
     Route::get('/categorias',[CategoriaController::class,'index'])->name('categoria.index');
+    Route::get("getcateogrias",[CategoriaController::class,"getCategorias"])->name("categorias");
+
+
     Route::get("/categorias/{categoria}",[CategoriaController::class,'edit'])->name('categoria.edit');
     Route::post('/categorias',[CategoriaController::class,'store'])->name('categoria.store');
     Route::put("/categorias/{categoria}",[CategoriaController::class,'update'])->name('categoria.update');   
@@ -87,16 +93,17 @@ Route::middleware('auth')->group(function(){
     Route::delete("/product/image",[ProductImageController::class,"destroy"])->name("delete.image");
 });
 
-
+Route::post("asignacion/create",[AsignacionController::class,"store"])->name("asignacion.store");
 Route::middleware('auth')->group(function(){
     
     
     Route::get("/asignacion",[AsignacionController::class,'index'])->name("asignacion.index");
     Route::get("/asignacion/{pedido}/create",[AsignacionController::class,'create'])->name("asignacion.create");
     Route::get("/asignacion/{orden}",[AsignacionController::class,"show"])->name("asignacion.listar");
-    Route::post("asignacion/create",[AsignacionController::class,"store"])->name("asignacion.store");
+    //Route::post("asignacion/create",[AsignacionController::class,"store"])->name("asignacion.store");
     Route::get("/asignacion/listar/{orden}",[AsignacionController::class,"asignacionorden"])->name("asignacion.listado");
     Route::delete("/asignacion/{asignacion}",[AsignacionController::class,"destroy"])->name("asignacion.delete");
+    Route::get("/asignacionesocupadas/{orden}",[AsignacionController::class,"ordenesAsignadas"])->name("asignacionesocupadas");
     
 });
 
@@ -119,6 +126,10 @@ Route::middleware('auth')->group(function(){
 });
 
 Route::middleware('auth')->group(function(){
+    Route::get('/cobros',[CobroController::class,'index'])->name('cobros');
+});
+
+Route::middleware('auth')->group(function(){
     Route::get('/listar',[PedidoController::class,"list"])->name("lista.pedidos");
     Route::get('/crear-pedidos',[PedidoController::class,'index'])->name('pedidos.index');
     Route::put('/pedido/{idpedido}',[PedidoController::class,'submit'])->name('pedido.submit');
@@ -133,6 +144,10 @@ Route::middleware('auth')->group(function(){
     Route::get("/pedido/{pedido}/cancelar",[PedidoController::class,"show"])->name("pedido.cancelar");
     Route::put("/pedido/{pedido}/cancelar",[PedidoController::class,"cancelar_pedido" ])->name("cancelar.pedido");
 
+});
+
+Route::middleware('auth')->group(function(){
+    Route::get('/reportemensual',[AlmacenReportController::class,'index'])->name('index');
 });
 
 require __DIR__.'/auth.php';

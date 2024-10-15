@@ -136,14 +136,7 @@ class ProductController extends Controller
 
     public function list(Category $category)
     {
-/* 
-        $products = Product::where("category_id", $category->id)->get();
 
-        if (!$products) {
-            return response()->json([]);
-        }
-
-        return response()->json($products);  */
          $categories= Category::where("status","active")->get();
 
         $productos= Product::where("category_id",$category->id)->get();
@@ -152,9 +145,10 @@ class ProductController extends Controller
 
     }
 
-    public  function productoconcategoria(Category $category){
+    public  function productoconcategoria( $category){
         
-        $products = Product::where("category_id", $category->id)->get();
+        $products = Product::where("category_id", $category)->get();
+        
 
         if (!$products) {
             return response()->json([]);

@@ -14,6 +14,7 @@ import { FiPrinter, FiSend } from "react-icons/fi";
 import { useCorteHook } from "./useCorteHook";
 import Acordeon from "@/Components/Acordeon";
 
+
 function IndeterminateCheckbox({ indeterminate, className = "", ...rest }) {
     const ref = useRef(null);
 
@@ -121,8 +122,12 @@ const Index = ({ auth }) => {
                 header: "Detalles",
                 accessorKey: "ordenes",
                 cell: ({ row }) => (
-                    <ul className="list-disc list-inside space-y-2 bg-gray-100 p-4 rounded-md shadow-md">
+                    
+
+                    <Acordeon title={""}>
+                         {JSON.stringify(row.original.orden)}
                         {row.original.ordenes.map((orden) => (
+                            
                             <li
                                 key={orden.id}
                                 className="border-b border-gray-300 pb-2"
@@ -142,7 +147,9 @@ const Index = ({ auth }) => {
                                 </p>
                             </li>
                         ))}
-                    </ul>
+                    
+                    </Acordeon>
+                    
                 ),
             },
             {

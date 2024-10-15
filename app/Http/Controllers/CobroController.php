@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Resources\CobroResource;
 use App\Models\Cobro;
 use Illuminate\Http\Request;
 
@@ -12,7 +13,8 @@ class CobroController extends Controller
      */
     public function index()
     {
-        //
+        $cobro=Cobro::where("estado","pendiente")->get();
+        return response()->json(CobroResource::collection($cobro));
     }
 
     /**

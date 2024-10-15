@@ -4,11 +4,11 @@ import AuthenticatedLayout from "@/Layouts/AuthenticatedLayout";
 import { Head, useForm } from "@inertiajs/react";
 import { FiTrash } from "react-icons/fi";
 const Listar = ({ auth, ordenes }) => {
-   const{errors,processing,delete:destroy}= useForm();
-    
-     const handleEliminar=(id)=>{
-             destroy(route("asignacion.delete",id))
-     }
+    const { errors, processing, delete: destroy } = useForm();
+
+    const handleEliminar = (id) => {
+        destroy(route("asignacion.delete", id));
+    };
     return (
         <AuthenticatedLayout
             user={auth.user}
@@ -21,7 +21,6 @@ const Listar = ({ auth, ordenes }) => {
             <Head title="Asignacion orden" />
             <div className="flex justify-center">
                 <Section>
-                    
                     <table className="min-w-full bg-white border border-gray-300">
                         <thead>
                             <tr className="bg-gray-100">
@@ -52,13 +51,14 @@ const Listar = ({ auth, ordenes }) => {
                             </tr>
                         </thead>
                         <tbody>
+                          
                             {ordenes.data.map((orden) => (
                                 <tr
                                     key={orden.order_id}
                                     className="hover:bg-gray-50"
                                 >
                                     <td className="py-2 px-4 border-b">
-                                        {orden.empleado_id.nombreCompleto}
+                                        {orden.empleado.nombreCompleto}
                                     </td>
                                     <td className="py-2 px-4 border-b">
                                         {orden.order_id}
@@ -93,7 +93,8 @@ const Listar = ({ auth, ordenes }) => {
                                     </td>
                                 </tr>
                             ))}
-                        </tbody>
+                                
+                        </tbody> 
                     </table>
                 </Section>
             </div>

@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import AuthenticatedLayout from "@/Layouts/AuthenticatedLayout";
 import { Head, Link, router } from "@inertiajs/react";
 import Section from "@/Components/Section";
@@ -7,7 +7,10 @@ import Checkbox from "@/Components/Checkbox";
 
 import SecondaryButton from "@/Components/SecondaryButton";
 import {
+    Badge,
     Button,
+    Card,
+    CardContent,
     Dialog,
     DialogActions,
     DialogContent,
@@ -19,157 +22,157 @@ import RenderButtons from "@/Components/Asignacion/RenderButtons";
 
 import { useState } from "react";
 import VerDisponibles from "@/Components/orders/Verdisponibles";
+import axios from "axios";
+import InformacionCliente from "@/Components/Asignacion/InformacionCliente";
+import useCategorias from "@/hooks/useCategorias";
 
 const Create = ({ auth, empleados, pedido }) => {
+   
+    const{categorias,inforCategoria} = useCategorias();
     const { ordenes, cliente, factura, fechaEntrega, envioDomicilio, estado } =
         pedido.data[0];
     const [newClientDialogOpen, setNewClientDialogOpen] = useState(false);
-    
 
     const [orderSelected, SetordenSelected] = useState();
     
- 
 
     return (
         <AuthenticatedLayout
             user={auth.user}
             header={
                 <h2 className="font-semibold text-xl text-gray-800 dark:text-gray-200 leading-tight">
-                    Asignación de Pedidos  <Link
+                    Asignación de Pedidos{" "}
+                    <Link
                         className="text-indigo-400 hover:text-indigo-600"
                         href="/asignacion"
                     >
-                      /  Lista Pedidos 
+                        / Lista Pedidos
                     </Link>
                 </h2>
             }
         >
             <Head title="Asignar Pedidos" />
-            <div className="flex justify-center   ">
-                <Section className="flex justify-center">
-                    <form action="">
-                        <div>
-                            <h2 className="text-lg font-medium">
-                                Informacion del Cliente
-                            </h2>
-                            <p>Numero Factura: Fac- {factura}</p>
-                            <p>
-                                Cliente : {cliente.identification_number}{" "}
-                                {cliente.full_name}
-                            </p>
-                            <p>
-                                Entrega:
-                                {fechaEntrega
-                                    ? fechaEntrega
-                                    : "Fecha no establecida"}
-                            </p>
-                            <p>Estado: {estado}</p>
-                            <p>
-                                Envio Domicilio:{" "}
-                                {envioDomicilio
-                                    ? "Envio Solicitado"
-                                    : "No solicitado"}
-                            </p>
-                        </div>
-                    </form>
-                    <Divider />
-                    <form className="m-6">
-                        
-                        {ordenes.map((orden) => (
-                            <div className="flex items-center  gap-4 " key={orden.id}>
- 
-                                <div className={`grid gap-3 w-full my-1  ${orden.estado==="completado"?"border-2 border-dashed p-4 border-green-500 bg-green-100":""} `}>
-                                    <div className="grid grid-cols-[1fr_auto] items-center gap-4 ">
-                                        <div className="flex items-center gap-3">
-                                            <img
-                                                src="/placeholder.svg"
-                                                alt="Producto"
-                                                width={64}
-                                                height={64}
-                                                className="rounded-md"
-                                                style={{
-                                                    aspectRatio: "64/64",
-                                                    objectFit: "cover",
-                                                }}
-                                            />
-                                            <div>
-                                                <h3 className="font-medium">
-                                                    {orden.producto}
-                                                </h3>
-                                                <p className="text-muted-foreground text-sm">
-                                                    Descripion:{" "}
-                                                    {orden.descripcion}
+            <div className="grid grid-cols-4 gap-4 p-4">
+                <div className="grid-cols-subgrid col-span-1 row-span-4">
+                    <InformacionCliente pedido={pedido.data[0]}/>
+                </div>
+                <div className="col-span-3 grid grid-cols-1 gap-6">
+                    <Card sx={{ borderRadius: "1rem" }}>
+                        <CardContent>
+                            <form className="space-y-6">
+                                {ordenes.map((orden) => (
+                                    <div
+                                        className={`border p-4 rounded-lg transition-all duration-300 ${
+                                            orden.estado === "completado"
+                                                ? "border-green-500 bg-green-50"
+                                                : "border-gray-200 bg-white"
+                                        }`}
+                                        key={orden.id}
+                                    >
+                                        <div className="grid grid-cols-1 md:grid-cols-2 gap-6 items-center">
+                                            {/* Información del Producto */}
+                                            <div className="flex items-start gap-4">
+                                                <img
+                                                    src="/placeholder.svg"
+                                                    alt="Producto"
+                                                    width={64}
+                                                    height={64}
+                                                    className="rounded-md"
+                                                    style={{
+                                                        aspectRatio: "64/64",
+                                                        objectFit: "cover",
+                                                    }}
+                                                />
+                                                <div>
+                                                    <h3 className="font-medium text-gray-900 dark:text-gray-100">
+                                                        {orden.producto}
+                                                    </h3>
+                                                    <p className="text-gray-600 text-sm">
+                                                        Descripción:{" "}
+                                                        {orden.descripcion}
+                                                    </p>
+                                                    <p className="text-gray-600 text-sm">
+                                                        Talla: {orden.talla}
+                                                    </p>
+                                                </div>
+                                            </div>
+
+                                            {/* Información de la Orden */}
+                                            <div className="text-right space-y-3">
+                                                <p className="text-gray-800 font-medium">
+                                                     Categoría:
+                                                    {inforCategoria(
+                                                        orden.categoriaId
+                                                    )}
                                                 </p>
-                                                <p className="text-muted-foreground text-sm">
-                                                    Talla: {orden.talla}
+                                                <p className="text-gray-600 text-sm">
+                                                    Cantidad: {orden.cantidad}
                                                 </p>
+                                                <p
+                                                    className={`text-sm font-medium ${
+                                                        orden.estado ===
+                                                        "creado"
+                                                            ? "text-yellow-500"
+                                                            : orden.estado ===
+                                                              "procesando"
+                                                            ? "text-blue-500"
+                                                            : orden.estado ===
+                                                              "completado"
+                                                            ? "text-green-500"
+                                                            : "text-red-500"
+                                                    }`}
+                                                >
+                                                    Estado: {orden.estado}
+                                                </p>
+
+                                                {/* Botones */}
+                                                <div className="flex justify-end gap-4">
+                                                    <SecondaryButton
+                                                        onClick={() => {
+                                                            SetordenSelected(
+                                                                orden
+                                                            );
+                                                            setNewClientDialogOpen(
+                                                                true
+                                                            );
+                                                        }}
+                                                    >
+                                                        Asignar Pedido
+                                                    </SecondaryButton>
+                                                    <VerDisponibles
+                                                        orden={orden}
+                                                    />
+                                                </div>
                                             </div>
                                         </div>
-                                        <div className="text-right">
-                                            <p className="font-medium">
-                                                Categoria: {orden.categoriaId}
-                                            </p>
-                                            <p className="text-muted-foreground text-sm">
-                                                Cantidad: {orden.cantidad}
-                                            </p>
-                                            <p
-                                                className={`text-sm ${
-                                                    orden.estado === "creado"
-                                                        ? "text-yellow-500"
-                                                        : orden.estado ===
-                                                          "procesando"
-                                                        ? "text-blue-500"
-                                                        : orden.estado ===
-                                                          "completado"
-                                                        ? "text-green-500"
-                                                        : "text-red-500"
-                                                }`}
-                                            >
-                                                Estado: {orden.estado}
-                                            </p>
-                                            
-                                            <SecondaryButton
-                                                onClick={() => {
-                                                    SetordenSelected(orden);
-                                                    setNewClientDialogOpen(
-                                                        true
-                                                    );
-                                                }}
-                                            >
-                                                Asignar Pedido
-                                            </SecondaryButton>
-                                            <VerDisponibles orden={orden}/>
-                                        </div>
                                     </div>
-                                </div>
-                            </div>
-                        ))}
-                    </form>
-                    <Divider />
-                </Section>
-                <Dialog
-                    open={newClientDialogOpen}
-                    onClose={() => setNewClientDialogOpen(false)}
-                >
-                    <DialogTitle>Registrar Asignacion</DialogTitle>
-                    <DialogContent>
-                        <h1 className="text-gray-500">
-                            Asignacion y costos de elaboracion
-                        </h1>
-                        
-                        <RenderButtons
-                            empleados={empleados}
-                            
-                            orden={orderSelected}
-                        />
-                    </DialogContent>
-                    <DialogActions>
-                        <Button onClick={() => setNewClientDialogOpen(false)}>
-                            Cancelar
-                        </Button>
-                    </DialogActions>
-                </Dialog>
+                                ))}
+                            </form>
+                        </CardContent>
+                    </Card>
+                </div>
             </div>
+            <Dialog
+                open={newClientDialogOpen}
+                onClose={() => setNewClientDialogOpen(false)}
+            >
+                <DialogTitle>Registrar Asignacion</DialogTitle>
+                <DialogContent>
+                    <h1 className="text-gray-500">
+                        Asignacion y costos de elaboracion
+                    </h1>
+
+                    <RenderButtons
+                        empleados={empleados}
+                        orden={orderSelected}
+                    />
+                </DialogContent>
+                <DialogActions>
+                    <Button onClick={() => setNewClientDialogOpen(false)}>
+                        Cancelar
+                    </Button>
+                </DialogActions>
+            </Dialog>
         </AuthenticatedLayout>
     );
 };

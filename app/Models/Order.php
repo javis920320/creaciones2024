@@ -19,4 +19,7 @@ class Order extends Model
                    ->withPivot('cantidad', 'fecha_asignacion', 'costo', 'tipocosto', 'estado') // Campos adicionales de la tabla pivot
                    ->withTimestamps();
    }
+   public function cobro(){
+    return $this->hasOne(Cobro::class,"order_id");
+   }
 }

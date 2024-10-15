@@ -21,23 +21,27 @@ class Pedido extends Model
         return $this->hasMany(Order::class, "pedidoId");
     }
 
+
+    public function asignaciones() {
+        return $this->hasMany(Asignacion::class);
+    }
     public function verificarEstado()
     {
-        if ($this->ordenes()->where("estado", "creado")->count() === 0) {
+        if ($this->ordenes()->where("estado", "creado")->count() == 0) {
             
             $this->estado = "Pedido confirmado";
             $this->save();
             return true;
-           //$this->enviarACobro();
+           
         }
         return false;
     }
-    public function enviarACobro($pedido_id,$precio)
+    public function enviarACobro($orderid,$precio)
     {
 
      
         Cobro::create([
-            "pedido_id" => $pedido_id,
+            "order_id" => $orderid,
             "monto" => $precio,
             "fechacobro" => Carbon::now(),
             "fechavecimiento" => null,
@@ -60,4 +64,6 @@ class Pedido extends Model
     public function historial(){
         return $this->hasMany(HistorialImpresion::class,"pedido_id");
     }
+
+   
 }

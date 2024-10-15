@@ -5,6 +5,7 @@ import InputLabel from '@/Components/InputLabel';
 import PrimaryButton from '@/Components/PrimaryButton';
 import TextInput from '@/Components/TextInput';
 import { Head, Link, useForm } from '@inertiajs/react';
+import SelectList from '@/Components/SelectList';
 
 export default function Register() {
     const { data, setData, post, processing, errors, reset } = useForm({
@@ -12,6 +13,7 @@ export default function Register() {
         email: '',
         password: '',
         password_confirmation: '',
+        tipo_empleado:""
     });
 
     useEffect(() => {
@@ -31,6 +33,7 @@ export default function Register() {
             <Head title="Register" />
 
             <form onSubmit={submit}>
+                {JSON.stringify(data,null,2)}
                 <div>
                     <InputLabel htmlFor="name" value="Name" />
 
@@ -46,6 +49,19 @@ export default function Register() {
                     />
 
                     <InputError message={errors.name} className="mt-2" />
+                </div>
+                <div>
+                    <InputLabel value={"Cargo"}></InputLabel>
+                    <SelectList className="w-full mt-1 text-gray-500" name="tipo_empleado" onChange={(e)=>setData("tipo_empleado",e.target.value)}>
+                        <option disabled selected>Tipo Empleado</option>
+                        <option value={"Operario"}>Operario</option>
+                        <option value={"Operario Externo"}>Operario Externo</option>
+                        <option value={"Corte y Diseño"}>Corte y Diseño</option>
+                        <option value={"Ventas"}>Ventas</option>
+
+
+                    </SelectList>
+                    <InputError message={errors.tipo_empleado}></InputError>
                 </div>
 
                 <div className="mt-4">

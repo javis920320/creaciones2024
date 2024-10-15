@@ -15,6 +15,14 @@ class CategoriaController extends Controller
         return inertia("Categories/Index");
     }
 
+    public function getCategorias(){
+
+
+        $categorias=Category::where("status","active")->get();
+
+        return response()->json(["categorias"=>$categorias]);
+    }
+
     /**
      * Show the form for creating a new resource.
      */

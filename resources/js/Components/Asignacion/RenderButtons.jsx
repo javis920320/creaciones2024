@@ -12,13 +12,16 @@ import { Transition } from "@headlessui/react";
 
 const RenderButtons = ({ empleados, orden }) => {
     const [products, setproducts] = useState([]);
+    const [ordenesasignadas, setnumerordenesasignadas] = useState(0);
     const [message, setMessage] = useState("");
     const [tipoEmpleado, settipoEmpleado] = useState();
 
     useEffect(() => {
-        /* axios(route("products.list", orden.categoriaId)).then((res) =>
-            setproducts(res.data)
-        ); */
+        axios
+            .get(route("asignacionesocupadas", orden.id))
+            .then((resp) => setnumerordenesasignadas(resp.data));
+    }, []);
+    useEffect(() => {
         axios(route("productos.categoria", orden.categoriaId)).then((res) =>
             setproducts(res.data)
         );
@@ -29,6 +32,7 @@ const RenderButtons = ({ empleados, orden }) => {
         setData,
         post,
         errors,
+        setError,
         recentlySuccessful,
         processing,
         reset,
@@ -37,7 +41,6 @@ const RenderButtons = ({ empleados, orden }) => {
         empleado_id: null || "",
     });
 
-    
     const tipoPago = (e) => {
         const idempleado = e.target.value;
 
@@ -50,21 +53,48 @@ const RenderButtons = ({ empleados, orden }) => {
 
     const handleSubmit = (e) => {
         e.preventDefault();
-
+        /* 
         post(route("asignacion.store"), {
             onSuccess: (response) => {
                 setMessage("Formulario enviado exitosamente.");
-                reset(); 
+                reset();
             },
             onError: (errors) => {
                 setMessage("Hubo un error en el envío.");
             },
+        }); */
+
+        axios.post(route("asignacion.store"), data)
+        .then(response => {
+            // Manejar la respuesta exitosa, puedes mostrar un mensaje o redirigir al usuario
+            
+            if(response.data.errors){
+                setError(response.data.errors);
+            }
+            // Aquí puedes realizar una acción como redireccionar a otra página
+        })
+        .catch(err => {
+            // Manejar los errores de la petición
+            if (err.response) {
+                // Si el error proviene del servidor (código de estado 4xx o 5xx)
+                console.error("Error del servidor:", err.response.data);
+            } else if (err.request) {
+                // Si no hubo respuesta del servidor
+                console.error("No se recibió respuesta:", err.request);
+            } else {
+                // Otros errores relacionados con la configuración de la petición
+                
+                 
+                console.error(JSON.stringify(err))
+            }
         });
+    
     };
     return (
         <div>
             
             <form onSubmit={handleSubmit}>
+            
                 {products.length > 0 ? (
                     <div>
                         <InputLabel>Producto</InputLabel>
@@ -106,7 +136,7 @@ const RenderButtons = ({ empleados, orden }) => {
                         type="number"
                         onChange={(e) => setData("cantidad", e.target.value)}
                         min={1}
-                        max={orden ? orden.cantidad : null}
+                        max={orden ? (orden.cantidad-ordenesasignadas) : null}
                     ></TextInput>
                     <InputError message={errors.cantidad}></InputError>
                 </div>

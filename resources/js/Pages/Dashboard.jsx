@@ -4,6 +4,11 @@ import Section from "@/Components/Section";
 import SecondaryButton from "@/Components/SecondaryButton";
 import Sidebar from "@/Layouts/Sidebar";
 import Asignacion from "./Pedidos/Asignacion";
+import { Button, ButtonGroup } from "@mui/material";
+import Tablecobros from "@/Components/Cobros/Tablecobros";
+import { FiEdit, FiList, FiScissors } from "react-icons/fi";
+import Acordeon from "@/Components/Acordeon";
+import TableCostos from "@/Components/Asignacion/TableCostos";
 
 export default function Dashboard({
     auth,
@@ -12,6 +17,9 @@ export default function Dashboard({
     products,
     costosproduccion,
     asignaciones,
+    cortes,
+    pendientesasignacion,
+    cobros,
 }) {
     return (
         <AuthenticatedLayout
@@ -23,51 +31,43 @@ export default function Dashboard({
             }
         >
             <Head title="Dashboard" />
-            
-            
-            <main className=" flex">
+
+            <main className=" flex  ">
                 <Sidebar />
-                <div className="parent">
-                    <Section className=" flex justify-center items-center  ">
-                        <h1 className="text-gray-500 dark:text-gray-200 text-2x1">
-                            Tus Pedidos{" "}
-                        </h1>
-                        <p className="text-gray-700 dark:text-gray-200">
-                            Introduce nuestro dinámico panel de pedidos para una
-                            gestión fluida y un análisis perspicaz.
-                        </p>
-                        <SecondaryButton>
-                            <Link href="/crear-pedidos">Crear Nuevo pedidos</Link>
-                        </SecondaryButton>
-                    </Section>
-                    <Section className="w-1/3 flex justify-center items-center ">
-                        <h1 className="text-gray-500 dark:text-gray-200 text-2x1 text-center">
-                            Asignar Pedidos
-                        </h1>
-                        <p className="text-gray-700 dark:text-gray-200 text-center">
-                            {clientes}
-                        </p>
-                        <SecondaryButton>
-                            {" "}
+                <div className=" w-full flex-col">
+                    <div className="w-full flex flex-row justify-between m-2 p-4 items-center bg-white">
+                        <Button
+                            variant="contained"
+                            startIcon={<FiList></FiList>}
+                        >
+                            <Link href="/crear-pedidos">Nuevo Pedido</Link>
+                        </Button>
+                        <Button
+                            variant="outlined"
+                            startIcon={<FiEdit></FiEdit>}
+                        >
                             <Link href={route("asignacion.index")}>
                                 Asignar{" "}
                             </Link>
-                        </SecondaryButton>
-                    </Section>
-                    <Section className="w-1/5">
-                        <h1 className="text-gray-500 dark:text-gray-200 text-2x1 text-center">
-                            Corte y Confección
-                        </h1>
-                        <p className="text-gray-700 dark:text-gray-200 text-center">
-                            {empleados}
-                        </p>
-                        <SecondaryButton>
-                            {" "}
+                        </Button>
+                        <Button variant="outlined" startIcon={<FiScissors />}>
                             <Link href={route("corteConfeccion.index")}>
-                                Ver Proceso
+                                En Cortes
                             </Link>
-                        </SecondaryButton>
-                    </Section>
+                        </Button>
+                    </div>
+
+                    <div className="flex flex-col">
+                        <Acordeon title={`Lista de costos empleados - $${costosproduccion.toFixed(2)}`}>
+                            <TableCostos  asignaciones={asignaciones} costosproduccion={costosproduccion}/>
+                        </Acordeon>
+                        <Acordeon title="Saldo por cobrar en Almacen ">
+                            <Tablecobros />
+                        </Acordeon>
+                    </div>
+                </div>
+                {/* <div className=" grid grid-cols-3">
+                    
                     <Section className="div4">
                         <h1 className="text-gray-400">Tabla de Costos</h1>
                         <table className="min-w-full table-auto">
@@ -92,25 +92,36 @@ export default function Dashboard({
                                     >
                                         <td className="px-4 py-2">
                                             {asignacion.empleado.nombreCompleto}{" "}
-                                            {/* Nombre del empleado */}
+                                            
                                         </td>
                                         <td className="px-4 py-2">
                                             {asignacion.total_asignaciones}{" "}
-                                            {/* Total de asignaciones */}
+                                            
                                         </td>
                                         <td className="px-4 py-2">
                                             ${asignacion.total_costo.toFixed(2)}{" "}
-                                            {/* Suma total de costos */}
+                                            
                                         </td>
                                     </tr>
                                 ))}
                             </tbody>
                             <tfoot>
-                                <tr className="border-t border-gray-200 dark:border-gray-700"><td colSpan={3} className="text-end px-4 py-2"> Total :${costosproduccion.toFixed(2)}</td></tr>
+                                <tr className="border-t border-gray-200 dark:border-gray-700">
+                                    <td
+                                        colSpan={3}
+                                        className="text-end px-4 py-2"
+                                    >
+                                        {" "}
+                                        Total :${costosproduccion.toFixed(2)}
+                                    </td>
+                                </tr>
                             </tfoot>
                         </table>
                     </Section>
-                </div>
+                    <Section>
+                        <Tablecobros />
+                    </Section>
+                </div> */}
             </main>
         </AuthenticatedLayout>
     );

@@ -19,7 +19,6 @@ const Asignacion = ({ auth }) => {
     const [filters, setFilters] = useState({
         factura: "",
     });
-
     const fetchData = async () => {
         setLoading(true);
         setError(null);
@@ -29,13 +28,13 @@ const Asignacion = ({ auth }) => {
                     page: pageIndex,
                     per_page: pageSize,
                     estado: "Producción en curso",
-                    factura:filters.factura|| null
+                    factura: filters.factura || null
                 },
             });
             setData(response.data.data); // Datos transformados
             setPageIndex(response.data.current_page); // Página actual
             setTotalPages(response.data.total_pages); // Total de páginas
-            setPageSize(response.total_items); // Total de ítems
+            setPageSize(response.data.total_items); // Total de ítems (acceso corregido)
         } catch (err) {
             console.error("Error fetching data:", err);
             setError("Hubo un error al cargar los datos.");
@@ -43,6 +42,7 @@ const Asignacion = ({ auth }) => {
             setLoading(false);
         }
     };
+    
 
     // Llamar a fetchData cuando cambie pageIndex o pageSize
     useEffect(() => {
