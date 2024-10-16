@@ -27,7 +27,8 @@ const TableCostos = ({asignaciones,costosproduccion}) => {
                                 {asignacion.total_asignaciones}{" "}
                             </td>
                             <td className="px-4 py-2">
-                                ${asignacion.total_costo.toFixed(2)}{" "}
+                            
+                                ${!isNaN(Number(asignacion.total_costo))?Number(asignacion.total_costo).toFixed(2):"0:00"}{" "}
                             </td>
                         </tr>
                     ))}
@@ -37,7 +38,8 @@ const TableCostos = ({asignaciones,costosproduccion}) => {
                         <td colSpan={3} className="text-end px-4 py-2">
                             {" "}
                             Total :$
-                            {costosproduccion.toFixed(2)}
+                            {!isNaN(Number(costosproduccion))?Number(costosproduccion).toFixed(2):"0.00"}
+                            
                         </td>
                     </tr>
                 </tfoot>
