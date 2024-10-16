@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\HasOne;
 
 class Order extends Model
 {
@@ -21,5 +22,9 @@ class Order extends Model
    }
    public function cobro(){
     return $this->hasOne(Cobro::class,"order_id");
+   }
+
+   public function categoria(){
+    return $this->hasOne(Category::class);
    }
 }

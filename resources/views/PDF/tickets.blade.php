@@ -16,7 +16,8 @@
 
         .ticket-container {
             width: 100%;
-            max-width: 226px; /* Aproximadamente 80mm en puntos */
+            max-width: 226px;
+            /* Aproximadamente 80mm en puntos */
             margin: 0 auto;
             padding: 0;
             text-align: center;
@@ -29,7 +30,8 @@
 
         .ticket-header h2 {
             margin: 0;
-            font-size: 16px; /* Tamaño ajustado para impresora */
+            font-size: 16px;
+            /* Tamaño ajustado para impresora */
         }
 
         .ticket-header p {
@@ -70,12 +72,17 @@
         }
 
         .descripcion {
-            font-size: 9px; /* Tamaño más pequeño para la descripción */
-            color: #555; /* Color más claro para diferenciar */
+            font-size: 9px;
+            /* Tamaño más pequeño para la descripción */
+            color: #555;
+            /* Color más claro para diferenciar */
             overflow: hidden;
-            white-space: nowrap; /* Evita el salto de línea */
-            text-overflow: ellipsis; /* Muestra puntos suspensivos si el texto es largo */
-            max-width: 100%; /* Asegura que no exceda el ancho de la celda */
+            white-space: nowrap;
+            /* Evita el salto de línea */
+            text-overflow: ellipsis;
+            /* Muestra puntos suspensivos si el texto es largo */
+            max-width: 100%;
+            /* Asegura que no exceda el ancho de la celda */
         }
 
         /* Pie de ticket */
@@ -126,7 +133,13 @@
                         <tr>
                             <td>{{ $producto['producto'] }}</td>
                             <td>{{ $producto['facultad'] }}</td>
-                            <td>{{ $producto['categoria'] }}</td>
+                            <td>
+                                @foreach ($categorias as $categoria)
+                                    @if($producto['categoriaId'] == $categoria->id)
+                                        {{ $categoria->nameCategory }}
+                                    @endif
+                                @endforeach
+                            </td>
                             <td>{{ $producto['cantidad'] }}</td>
                             <td>{{ $producto['talla'] }}</td>
                         </tr>
@@ -135,17 +148,18 @@
                         </tr>
                     @endforeach
                 @endif
+
             </tbody>
         </table>
 
         <!-- Total del Pedido -->
         <div class="ticket-details">
-            
+
         </div>
 
         <!-- Pie del pedido -->
         <div class="ticket-footer">
-            <p>¡Gracias por su compra!</p>
+
             <p>https://www.linkedin.com/in/javilopezdev/</p>
         </div>
     </div>

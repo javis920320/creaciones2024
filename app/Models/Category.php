@@ -13,4 +13,8 @@ class Category extends Model
     public function products(){
         return $this->hasMany(Product::class);
     }
+
+    public function ordern(){
+        return $this->hasOne(Order::class,"categoriaId");
+    }
 }

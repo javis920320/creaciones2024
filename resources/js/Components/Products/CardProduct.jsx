@@ -38,13 +38,11 @@ const CardProduct = ({ product }) => {
                 <p className="text-sm mb-4">Descripcion:{description}</p>
 
                 <div className="flex items-center justify-between">
-                    {/* <span className="text-lg font-bold">
-                        ${price.toFixed(2)}
-                    </span> */}
+
                     <div className="flex items-center gap-2">
                         <FiStar className="w-4 h-4 fill-yellow-400 stroke-yellow-400" />
                         <span className="ml-1 text-sm">
-                            Precio :${price.toFixed(1)}
+                            Precio :${!isNaN(Number(price))?Number(price).toFixed(2):"0.00"}
                         </span>
                     </div>
                 </div>

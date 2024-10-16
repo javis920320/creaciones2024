@@ -186,55 +186,54 @@ class PedidoController extends Controller
     public function destroy(Pedido $pedido)
     {
         //
-    }
-    public function imprimir(Request $request)
+    }public function imprimir(Request $request)
     {
         $ids = $request->input('pedidos');
-
+    
         // Recuperar los pedidos seleccionados
         $pedidos = Pedido::whereIn('id', $ids)->get();
-        ;
-
+        $categorias = Category::where("status", "active")->get();
+    
         // Registrar la impresión en el historial
         foreach ($pedidos as $pedido) {
             HistorialImpresion::create([
                 'pedido_id' => $pedido->id,
                 'fecha_impresion' => Carbon::now(),
-                'usuario' => auth()->user()->name,  // Puedes ajustar esto según tus necesidades
+                'usuario' => auth()->user()->name,  // Registrar el usuario
                 'tipo_impresion' => 'POS',
             ]);
         }
-
+    
         // Crear directorio si no existe
         $ticketsPath = storage_path('tickets');
         if (!File::exists($ticketsPath)) {
             File::makeDirectory($ticketsPath, 0755, true);
         }
-
+    
         // Instanciar el mergeador de PDFs
         $merger = new Merger();
-
+    
         // Generar y agregar PDFs al merger
         foreach ($pedidos as $pedido) {
             // Generar el PDF para cada pedido
-            $pdf = PDF::loadView('PDF.tickets', compact('pedido'));
-            $pdf->setPaper([0, 0, 250, 300], 'portrait');
-
+            $pdf = PDF::loadView('PDF.tickets', compact('pedido', 'categorias'));
+            $pdf->setPaper([0, 0, 250, 400], 'portrait');  // Altura dinámica
+    
             // Guardar temporalmente cada PDF en el sistema de archivos
             $pdfPath = $ticketsPath . '/' . $pedido->id . '.pdf';
             $pdf->save($pdfPath);
-
+    
             // Agregar el PDF al merger
             $merger->addFile($pdfPath);
         }
-
+    
         // Combinar los PDFs en un único archivo
         $combinedPdf = $merger->merge();
-
+    
         // Guardar el PDF combinado
         $outputPath = $ticketsPath . '/combined_tickets_' . time() . '.pdf';
         file_put_contents($outputPath, $combinedPdf);
-
+    
         // Eliminar los archivos PDF temporales
         foreach ($pedidos as $pedido) {
             $pdfPath = $ticketsPath . '/' . $pedido->id . '.pdf';
@@ -242,10 +241,11 @@ class PedidoController extends Controller
                 File::delete($pdfPath);
             }
         }
-
+    
         // Retornar el archivo combinado al navegador
         return response()->file($outputPath)->deleteFileAfterSend(true);
     }
+    
 
     public function cancelar_pedido(Pedido $pedido, Request $request)
     {
