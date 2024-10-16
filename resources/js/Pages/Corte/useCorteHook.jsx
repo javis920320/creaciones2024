@@ -80,8 +80,11 @@ export function useCorteHook() {
     // Filtrado de datos con base en los filtros aplicados
     const datainstance = useMemo(() => {
         return pedidos.filter((row) => {
+            // Asegurarse de que row.factura no sea null o undefined
+            const factura = row.factura ? String(row.factura) : '';
+    
             return (
-                row.factura.includes(filters.factura) &&
+                factura.includes(filters.factura) && // Verificación de factura
                 row.cliente.full_name
                     .toLowerCase()
                     .includes(filters.cliente.toLowerCase()) &&
@@ -89,6 +92,7 @@ export function useCorteHook() {
             );
         });
     }, [pedidos, filters]);
+    
 
     return {
         enviapedidosproduccion,
