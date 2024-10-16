@@ -58,70 +58,24 @@ export default function Dashboard({
                     </div>
 
                     <div className="flex flex-col">
-                        <Acordeon title={`Lista de costos empleados - $${costosproduccion.toFixed(2)}`}>
-                            <TableCostos  asignaciones={asignaciones} costosproduccion={costosproduccion}/>
+                        <Acordeon
+                            title={`Lista de costos empleados - $${
+                                !isNaN(Number(costosproduccion))
+                                    ? Number(costosproduccion).toFixed(2)
+                                    : "0.00"
+                            }`}
+                        >
+                            <TableCostos
+                                asignaciones={asignaciones}
+                                costosproduccion={costosproduccion}
+                            />
                         </Acordeon>
+
                         <Acordeon title="Saldo por cobrar en Almacen ">
                             <Tablecobros />
                         </Acordeon>
                     </div>
                 </div>
-                {/* <div className=" grid grid-cols-3">
-                    
-                    <Section className="div4">
-                        <h1 className="text-gray-400">Tabla de Costos</h1>
-                        <table className="min-w-full table-auto">
-                            <thead>
-                                <tr>
-                                    <th className="px-4 py-2 text-left">
-                                        Empleado
-                                    </th>
-                                    <th className="px-4 py-2 text-left">
-                                        Total Asignaciones
-                                    </th>
-                                    <th className="px-4 py-2 text-left">
-                                        Total Costo
-                                    </th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                {asignaciones.map((asignacion, index) => (
-                                    <tr
-                                        key={index}
-                                        className="border-t border-gray-200 dark:border-gray-700"
-                                    >
-                                        <td className="px-4 py-2">
-                                            {asignacion.empleado.nombreCompleto}{" "}
-                                            
-                                        </td>
-                                        <td className="px-4 py-2">
-                                            {asignacion.total_asignaciones}{" "}
-                                            
-                                        </td>
-                                        <td className="px-4 py-2">
-                                            ${asignacion.total_costo.toFixed(2)}{" "}
-                                            
-                                        </td>
-                                    </tr>
-                                ))}
-                            </tbody>
-                            <tfoot>
-                                <tr className="border-t border-gray-200 dark:border-gray-700">
-                                    <td
-                                        colSpan={3}
-                                        className="text-end px-4 py-2"
-                                    >
-                                        {" "}
-                                        Total :${costosproduccion.toFixed(2)}
-                                    </td>
-                                </tr>
-                            </tfoot>
-                        </table>
-                    </Section>
-                    <Section>
-                        <Tablecobros />
-                    </Section>
-                </div> */}
             </main>
         </AuthenticatedLayout>
     );
