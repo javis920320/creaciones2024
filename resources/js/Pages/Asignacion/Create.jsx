@@ -1,10 +1,6 @@
 import React, { useEffect } from "react";
 import AuthenticatedLayout from "@/Layouts/AuthenticatedLayout";
 import { Head, Link, router } from "@inertiajs/react";
-import Section from "@/Components/Section";
-import SelectList from "@/Components/SelectList";
-import Checkbox from "@/Components/Checkbox";
-
 import SecondaryButton from "@/Components/SecondaryButton";
 import {
     Badge,
@@ -18,18 +14,19 @@ import {
     Divider,
 } from "@mui/material";
 import { useRef } from "react";
-import RenderButtons from "@/Components/Asignacion/RenderButtons";
+import RenderButtons from "@/Components/Asignacion/FormularioAsignacion";
 
 import { useState } from "react";
 import VerDisponibles from "@/Components/orders/Verdisponibles";
 import axios from "axios";
 import InformacionCliente from "@/Components/Asignacion/InformacionCliente";
 import useCategorias from "@/hooks/useCategorias";
+import FormularioAsignacion from "@/Components/Asignacion/FormularioAsignacion";
 
 const Create = ({ auth, empleados, pedido }) => {
    
     const{categorias,inforCategoria} = useCategorias();
-    const { ordenes, cliente, factura, fechaEntrega, envioDomicilio, estado } =
+    const { ordenes } =
         pedido.data[0];
     const [newClientDialogOpen, setNewClientDialogOpen] = useState(false);
 
@@ -153,6 +150,7 @@ const Create = ({ auth, empleados, pedido }) => {
                 </div>
             </div>
             <Dialog
+            maxWidth={"lg"}
                 open={newClientDialogOpen}
                 onClose={() => setNewClientDialogOpen(false)}
             >
@@ -162,7 +160,7 @@ const Create = ({ auth, empleados, pedido }) => {
                         Asignacion y costos de elaboracion
                     </h1>
 
-                    <RenderButtons
+                    <FormularioAsignacion
                         empleados={empleados}
                         orden={orderSelected}
                     />

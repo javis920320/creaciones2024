@@ -2,7 +2,7 @@ import { Card, CardContent } from '@mui/material'
 import React from 'react'
 
 const InformacionCliente = ({pedido}) => {
-    const { ordenes, cliente, factura, fechaEntrega, envioDomicilio, estado } =
+    const {  cliente, factura, fechaEntrega, envioDomicilio, estado } =
         pedido;
   return (
     <Card sx={{ borderLeft: "2px", borderRadius: "1rem" }}>

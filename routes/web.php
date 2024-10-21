@@ -93,14 +93,14 @@ Route::middleware('auth')->group(function(){
     Route::delete("/product/image",[ProductImageController::class,"destroy"])->name("delete.image");
 });
 
-Route::post("asignacion/create",[AsignacionController::class,"store"])->name("asignacion.store");
+
 Route::middleware('auth')->group(function(){
     
     
     Route::get("/asignacion",[AsignacionController::class,'index'])->name("asignacion.index");
     Route::get("/asignacion/{pedido}/create",[AsignacionController::class,'create'])->name("asignacion.create");
     Route::get("/asignacion/{orden}",[AsignacionController::class,"show"])->name("asignacion.listar");
-    //Route::post("asignacion/create",[AsignacionController::class,"store"])->name("asignacion.store");
+    Route::post("/asignacion/create",[AsignacionController::class,"store"])->name("asignacion.store");
     Route::get("/asignacion/listar/{orden}",[AsignacionController::class,"asignacionorden"])->name("asignacion.listado");
     Route::delete("/asignacion/{asignacion}",[AsignacionController::class,"destroy"])->name("asignacion.delete");
     Route::get("/asignacionesocupadas/{orden}",[AsignacionController::class,"ordenesAsignadas"])->name("asignacionesocupadas");

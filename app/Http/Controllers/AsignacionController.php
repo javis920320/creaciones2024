@@ -133,7 +133,7 @@ class AsignacionController extends Controller
         $limitcantidad = (int) $order->cantidad;
 
         if ($totalAsignado == $limitcantidad) {
-            
+
             $order->estado = "completado";
             $order->save();
             $precio = Asignacion::where("order_id", $orderId)->sum("precio");
@@ -141,10 +141,10 @@ class AsignacionController extends Controller
 
             if ($order->pedido->verificarEstado()) {
 
-                
+
                 $precio = Asignacion::where("order_id", $orderId)->sum("precio");
 
-               // $order->pedido->enviarAcobro($orderId, $precio);
+                // $order->pedido->enviarAcobro($orderId, $precio);
 
             }
         }
@@ -178,21 +178,22 @@ class AsignacionController extends Controller
             'cantidad' => $validaciones['cantidad'],
             'fecha_asignacion' => $validaciones['fecha_asignacion'],
             "tipocosto" => $validaciones["tipocosto"],
-            //calculo de costos
             'costo' => $validaciones['cantidad'] * $precioProducto,
             'estado' => $validaciones['estado'],
-            "precio" => $producto->price * $validaciones["cantidad"],
+            "precio" => $validaciones["tipocosto"]==="sincosto"?0:$producto->price * $validaciones["cantidad"],
         ]);
 
     }
 
     private function calcularPrecioProducto($producto, $tipoCosto)
     {
-
+        
 
         switch ($tipoCosto) {
             case 'operador_normal':
+
                 return $producto->costo_produccion;
+
             case 'hora_extra':
                 return $producto->costoProduccionExtra;
             case 'externo_normal':
@@ -209,7 +210,8 @@ class AsignacionController extends Controller
     public function show(string $orden)
     {
         $asignaciones = Asignacion::where("order_id", $orden)->get();
-        return response()->json($asignaciones);
+        // return response()->json($asignaciones);
+        return response()->json(AsignacionResource::collection($asignaciones));
 
     }
     public function asignacionorden($orden)
@@ -245,14 +247,21 @@ class AsignacionController extends Controller
      */
     public function destroy(Asignacion $asignacion)
     {
+        try {
+            $orden = Order::where("id", $asignacion->order_id)->first();
+            $asignacion->delete();
+            $orden->estado = "creado";
+            $orden->save();
+            return response()->json(["eliminado"=>"asignacion eliminada"]);
+            
+        } catch (\Throwable $th) {
+            //throw $th;
+        }
 
-        $orden = Order::where("id", $asignacion->order_id)->first();
-        $asignacion->delete();
-        $orden->estado = "creado";
-        $orden->save();
+        /* return redirect()->route('asignacion.create', $asignacion->orden->pedidoId)
+            ->with('success', 'Asignación eliminada exitosamente.'); */
 
-        return redirect()->route('asignacion.create', $asignacion->orden->pedidoId)
-            ->with('success', 'Asignación eliminada exitosamente.');
+
     }
 
     public function ordenesAsignadas($orden)

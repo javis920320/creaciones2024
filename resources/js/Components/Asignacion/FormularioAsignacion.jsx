@@ -9,38 +9,54 @@ import { useEffect } from "react";
 import axios from "axios";
 import InputError from "../InputError";
 import { Transition } from "@headlessui/react";
+import useProducto from "@/hooks/useProducto";
+import { useAsignacion } from "@/hooks/useAsignacion";
+import ListaAsignacion from "./ListaAsignacion";
+import { Divider } from "@mui/material";
 
-const RenderButtons = ({ empleados, orden }) => {
-    const [products, setproducts] = useState([]);
-    const [ordenesasignadas, setnumerordenesasignadas] = useState(0);
+const FormularioAsignacion = ({ empleados, orden }) => {
+   
+    const { obtenerProductosconcategoria, products, errorsProduct } =
+        useProducto(orden.categoriaId);
+    const { errorAsignacion, asignacion, AsignarOrden ,loading,numerodeasignaciones,deleteAsignacion} = useAsignacion(
+        orden.id
+    );
+    
     const [message, setMessage] = useState("");
-    const [tipoEmpleado, settipoEmpleado] = useState();
+  const [tipoEmpleado, settipoEmpleado] = useState();
 
-    useEffect(() => {
-        axios
-            .get(route("asignacionesocupadas", orden.id))
-            .then((resp) => setnumerordenesasignadas(resp.data));
-    }, []);
-    useEffect(() => {
-        axios(route("productos.categoria", orden.categoriaId)).then((res) =>
-            setproducts(res.data)
-        );
-    }, []);
 
     const {
         data,
         setData,
-        post,
         errors,
         setError,
         recentlySuccessful,
         processing,
-        reset,
+        clearErrors
+        
     } = useForm({
         order_id: orden?.id || null,
         empleado_id: null || "",
     });
+    useEffect(() => {
+        
+        if (errorAsignacion) {
+            console.log("cambio de error")
+            if (typeof errorAsignacion === 'object' && errorAsignacion !== null) {
+                // Si es un objeto, puede contener varios errores específicos
+                setError(errorAsignacion);
+            } else {
+                // Si es un string o un mensaje general de error
+                setError({ general: errorAsignacion });
+            }
+        } else {
+            // Si no hay errores, limpia el estado de errores
+            setError(null);
+        }
 
+    }, [errorAsignacion]);
+    
     const tipoPago = (e) => {
         const idempleado = e.target.value;
 
@@ -53,48 +69,15 @@ const RenderButtons = ({ empleados, orden }) => {
 
     const handleSubmit = (e) => {
         e.preventDefault();
-        /* 
-        post(route("asignacion.store"), {
-            onSuccess: (response) => {
-                setMessage("Formulario enviado exitosamente.");
-                reset();
-            },
-            onError: (errors) => {
-                setMessage("Hubo un error en el envío.");
-            },
-        }); */
-
-        axios.post(route("asignacion.store"), data)
-        .then(response => {
-            // Manejar la respuesta exitosa, puedes mostrar un mensaje o redirigir al usuario
-            
-            if(response.data.errors){
-                setError(response.data.errors);
-            }
-            // Aquí puedes realizar una acción como redireccionar a otra página
-        })
-        .catch(err => {
-            // Manejar los errores de la petición
-            if (err.response) {
-                // Si el error proviene del servidor (código de estado 4xx o 5xx)
-                console.error("Error del servidor:", err.response.data);
-            } else if (err.request) {
-                // Si no hubo respuesta del servidor
-                console.error("No se recibió respuesta:", err.request);
-            } else {
-                // Otros errores relacionados con la configuración de la petición
-                
-                 
-                console.error(JSON.stringify(err))
-            }
-        });
-    
+        AsignarOrden(data);
+        clearErrors()
+        
     };
     return (
         <div>
+        
             
-            <form onSubmit={handleSubmit}>
-            
+            <form onSubmit={handleSubmit} className="my-2">
                 {products.length > 0 ? (
                     <div>
                         <InputLabel>Producto</InputLabel>
@@ -104,13 +87,12 @@ const RenderButtons = ({ empleados, orden }) => {
                             }
                             className="w-1/2"
                         >
-                            <option disabled selected>
-                                Seleccione{" "}
-                            </option>
+                            <option defaultValue>Seleccione </option>
                             {products.map(({ nameProduct, id }) => (
-                                <option value={id}>{nameProduct}</option>
+                                <option value={id} key={id}>{nameProduct}</option>
                             ))}
                         </SelectList>
+                        <InputError message={errors.producto}></InputError>
                     </div>
                 ) : (
                     <h2 className="text-red-500">
@@ -119,7 +101,7 @@ const RenderButtons = ({ empleados, orden }) => {
                 )}
                 <div>
                     <InputLabel>Lista de trabajadores </InputLabel>
-                    <SelectList onChange={tipoPago} name="tipoempleado">
+                    <SelectList onChange={tipoPago} className="w-1/2" name="tipoempleado">
                         <option>Asignar a:</option>
                         {empleados.map((empleado) => (
                             <option value={empleado.id} key={empleado.id}>
@@ -136,7 +118,7 @@ const RenderButtons = ({ empleados, orden }) => {
                         type="number"
                         onChange={(e) => setData("cantidad", e.target.value)}
                         min={1}
-                        max={orden ? (orden.cantidad-ordenesasignadas) : null}
+                        max={orden ? orden.cantidad - numerodeasignaciones : null}
                     ></TextInput>
                     <InputError message={errors.cantidad}></InputError>
                 </div>
@@ -197,13 +179,11 @@ const RenderButtons = ({ empleados, orden }) => {
                         </div>
                     </>
                 )}
+                
                 <InputError message={errors.order_id}></InputError>
                 <InputError message={errors.fecha_asignacion}></InputError>
                 <InputError message={errors.tipocosto}></InputError>
 
-                {/* <PrimaryButton disabled={!products.length > 0}>
-                    Registrar Asignación
-                </PrimaryButton> */}
                 <div className="flex items-center gap-4">
                     <PrimaryButton disabled={processing}>
                         {" "}
@@ -225,8 +205,16 @@ const RenderButtons = ({ empleados, orden }) => {
             </form>
             {/* Mostrar el mensaje de éxito o error */}
             {message && <p className="text-green-500">{message}</p>}
+            <Divider></Divider>
+            <section className="m-4">
+                <h2 className="text-gray-700 dark:text-gray-300 text-center uppercase">
+                    Trabajos Asignados
+                </h2>
+
+                <ListaAsignacion asignacion={asignacion} deleteAsignacion={deleteAsignacion}/>
+            </section>
         </div>
     );
 };
 
-export default RenderButtons;
+export default FormularioAsignacion;

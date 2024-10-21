@@ -22,9 +22,8 @@ const VerDisponibles = ({ orden }) => {
       <p className="text-sm font-medium text-gray-600 dark:text-gray-300">
         Asignados: <span className="text-green-600 dark:text-green-400 font-bold">{cantidadAsignada}/{orden.cantidad}</span>
       </p>
-
    
-      <Link href={route("asignacion.listado",orden.id)}  className="text-blue-600 dark:text-blue-400 font-semibold hover:underline">Ver asignaciónes</Link>
+      {/* <Link href={route("asignacion.listado",orden.id)}  className="text-blue-600 dark:text-blue-400 font-semibold hover:underline">Ver asignaciónes</Link> */}
     </div>
   );
 };

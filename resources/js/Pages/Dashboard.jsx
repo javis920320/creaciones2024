@@ -35,7 +35,7 @@ export default function Dashboard({
             <main className=" flex  ">
                 <Sidebar />
                 <div className=" w-full flex-col">
-                    <div className="w-full flex flex-row justify-between m-2 p-4 items-center bg-white">
+                    <div className="w-full flex flex-row justify-between m-2 p-4 items-center bg-white dark:bg-slate-900">
                         <Button
                             variant="contained"
                             startIcon={<FiList></FiList>}

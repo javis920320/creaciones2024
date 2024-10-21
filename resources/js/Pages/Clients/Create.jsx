@@ -5,6 +5,7 @@ import Section from "@/Components/Section";
 import TextInput from "@/Components/TextInput";
 import AuthenticatedLayout from "@/Layouts/AuthenticatedLayout";
 import { Head, Link, useForm } from "@inertiajs/react";
+import { isNumber } from "lodash";
 import React from "react";
 
 const Create = ({ auth, client = null }) => {
@@ -63,8 +64,11 @@ const Create = ({ auth, client = null }) => {
                                 <InputLabel>Nombre Completo</InputLabel>
                                 <TextInput
                                 value={data.full_name}
-                                    onChange={(e) =>
+                                    onChange={(e) =>{
+                                        if(String(e.target.value).startsWith(" "))return;
                                         setData("full_name", e.target.value)
+                                    }
+                                       
                                     }
                                     required
                                     autoComplete="full_name"
@@ -81,11 +85,16 @@ const Create = ({ auth, client = null }) => {
                                 <TextInput
                                 type="number"
                                 value={data.identification_number}
-                                    onChange={(e) =>
+                                    onChange={(e) =>{
+                                        const{value}=e;    
+                                        if(!isNumber(Number(value)) )return;
                                         setData(
                                             "identification_number",
                                             e.target.value
                                         )
+                                    }
+
+                                        
                                     }
                                     className="mt-1 block w-full"
                                 />

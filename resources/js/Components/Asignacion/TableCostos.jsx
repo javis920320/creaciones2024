@@ -4,8 +4,8 @@ const TableCostos = ({asignaciones,costosproduccion}) => {
     return (
         <>
             <h1 className="text-gray-400">Tabla de Costos</h1>
-            <table className="min-w-full table-auto">
-                <thead>
+            <table className="w-full text-sm text-left rtl:text-right text-gray-500 dark:text-gray-400 border-collapse">
+                <thead className="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400 border-b-2 border-gray-500">
                     <tr>
                         <th className="px-4 py-2 text-left">Empleado</th>
                         <th className="px-4 py-2 text-left">

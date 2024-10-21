@@ -8,9 +8,9 @@ const Acordeon = ({ title = "Sin asignación", children }) => {
     };
 
     return (
-        <div className="flex w-full flex-col gap-4 overflow-hidden">
+        <div className="flex w-full flex-col gap-4 overflow-hidden ">
             <div
-                className="flex flex-col items-start justify-start rounded-lg border border-slate-200 bg-white p-3 hover:cursor-pointer hover:bg-gray-50"
+                className="flex flex-col items-start justify-start rounded-lg border border-slate-200 dark:border-slate-500 bg-white p-3 hover:cursor-pointer hover:bg-gray-50 hover:dark:bg-slate-600 dark:bg-slate-800 dark:text-gray-300"
                 onClick={toggleAccordion} // Alternar al hacer clic
             >
                 <div className="flex w-full items-center justify-between">
