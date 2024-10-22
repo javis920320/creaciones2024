@@ -104,6 +104,7 @@ class ProductController extends Controller
      */
     public function update(Request $request, Product $idProducto)
     {
+        
         $validateInfo = $request->validate([
             "nameProduct" => "required|min:5|unique:products,nameProduct," . $idProducto->id, //,except,id",
             "category_id" => "required",
@@ -117,13 +118,29 @@ class ProductController extends Controller
         ]);
 
         if ($idProducto->update($validateInfo)) {
-            return redirect()->route("products.index");
+
+            if ($request->images_url) {
+                foreach ($request->images_url as $image) {
+                    Product_image::create([
+                        "product_id" => $idProducto->id,
+                        "image_path" => $image,
+                    ]);
+                }
+            }
+           // $idProducto->imagenes()->create(["image_path"=>$request->images_url]);
+
+            //dd($idProducto);
+            return redirect()->back();
+            //return redirect()->route("products.index");
         }
-        if (count($request->images_url) > 3) {
+
+        
+        
+        /* if (count($request->images_url) > 3) {
             $idProducto->imagenes()->update($request->images_url);
         } else {
             $idProducto->imagenes()->create($request->images_url);
-        }
+        } */
 
     }
     /**

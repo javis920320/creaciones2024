@@ -1,6 +1,6 @@
 import React, { useEffect } from "react";
 import AuthenticatedLayout from "@/Layouts/AuthenticatedLayout";
-import { Head, Link, useForm } from "@inertiajs/react";
+import { Head, Link, useForm, usePage } from "@inertiajs/react";
 import Section from "@/Components/Section";
 import TextInput from "@/Components/TextInput";
 import InputLabel from "@/Components/InputLabel";
@@ -9,12 +9,14 @@ import SecondaryButton from "@/Components/SecondaryButton";
 import SelectList from "@/Components/SelectList";
 import DropzoneProducts from "@/Components/Dropzone/DropzoneProducts";
 import CarruceImage from "@/Components/Products/CarruselImages";
+import PreviewProduct from "@/Components/Products/PreviewProduct";
 
 const Create = ({ auth, categorias, product = null }) => {
+    const { url } = usePage();
     const iseditable = !!product;
 
-    const { data, put, setData, errors, post } = useForm({
-        category_id: product?.data?.[0]?.category_id || "",
+    const { data, put, setData, errors, post, processing } = useForm({
+        category_id: product?.data?.[0]?.categoria?.id || "",
         nameProduct: product?.data?.[0]?.nameProduct || "",
         description: product?.data?.[0]?.description || "",
         status: product?.data?.[0]?.status || "",
@@ -59,6 +61,7 @@ const Create = ({ auth, categorias, product = null }) => {
                             Diligencia todo el formulario para agregar a tu
                             inventario
                         </p>
+             
 
                         <div className="w-full">
                             <InputLabel>Nombre de Producto</InputLabel>
@@ -90,25 +93,31 @@ const Create = ({ auth, categorias, product = null }) => {
                                 message={errors.nameProduct}
                             />
                         </div>
+                        
                         <div className="flex">
                             <div className="w-3/4">
                                 <InputLabel>Categoria</InputLabel>
+                                
                                 <SelectList
-                                    className=" mt-1 block w-full"
-                                    value={data.category_id}
+                                    className="mt-1 block w-full"
+                                    value={data.category_id || ""} // Asegúrate de que haya un valor por defecto
                                     onChange={(e) =>
                                         setData("category_id", e.target.value)
-                                    }
+                                    } // Actualiza el estado
                                 >
-                                    <option value="" checked disabled>
+                                    <option value="" disabled>
                                         Seleccione la categoria
                                     </option>
                                     {categorias.map((categoria) => (
-                                        <option value={categoria.id}>
+                                        <option
+                                            key={categoria.id}
+                                            value={categoria.id} // Vincula el valor con el id de la categoría
+                                        >
                                             {categoria.nameCategory}
                                         </option>
                                     ))}
                                 </SelectList>
+
                                 <InputError
                                     className="mt-2"
                                     message={errors.category_id}
@@ -142,7 +151,7 @@ const Create = ({ auth, categorias, product = null }) => {
                                 <option value={""} disabled>
                                     Estado
                                 </option>
-                                <option checked={true} value={"Activo"}>
+                                <option checked value={"Activo"}>
                                     Activo
                                 </option>
                                 <option value={"Inactivo"}>Inactivo</option>
@@ -211,30 +220,23 @@ const Create = ({ auth, categorias, product = null }) => {
                             {iseditable ? "Editar Producto" : "Crear Producto"}
                         </SecondaryButton>
                     </div>
+                    {processing ? (
+                        <h1 className="text-green-200 bg-green-500 p-4">
+                            Datos almacenados correctamente
+                        </h1>
+                    ) : null}
                 </form>
                 <div>
                     {images.length > 0 && (
                         <Section className="h-28 w-44">
-                            <CarruceImage images={images} />
+                            PreviewProduct
+                            <PreviewProduct images={images}></PreviewProduct>
                         </Section>
                     )}
-                    
-                    
-                    
+
                     <div className="space-y-4">
                         <div className="border-2 border-dashed border-gray-300 rounded-lg p-4 text-center">
-                        <DropzoneProducts setData={setData} />
-                        </div>
-                        <div className="grid grid-cols-2 gap-4">
-                            
-                            {images.map(({image_path, index}) => (
-                                <img
-                                    key={index}
-                                    src={image_path}
-                                    alt={`Uploaded ${index + 1}`}
-                                    className="w-full h-32 object-cover rounded"
-                                />
-                            ))}
+                            <DropzoneProducts setData={setData} />
                         </div>
                     </div>
                 </div>
