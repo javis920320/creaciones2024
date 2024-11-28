@@ -1,0 +1,8 @@
+
+    [
+        {"name":"Principal","path":"/dashboard"},
+        {"name":"Productos","path":"/products"},
+        {"name":"Empleados","path":"/employees"},
+        {"name":"Clientes","path":"/clients"},
+        {"name":"Reportes","path":"/reports"}
+    ]

@@ -1,23 +1,76 @@
-import React from 'react'
-
+import React, { useState } from "react";
 import { Link } from "@inertiajs/react";
-import { FiActivity, FiArchive, FiUser, FiUsers } from 'react-icons/fi';
+import { FiFolder, FiMenu } from "react-icons/fi";
+import {
+    Drawer,
+    Button,
+    List,
+    ListItem,
+    ListItemButton,
+    ListItemIcon,
+    ListItemText,
+} from "@mui/material";
 
-export default function Sidebar() {
+export default function Sidebar({ listItems = [] }) {
+    const [open, setOpen] = useState(false);
+
+    const toggleDrawer = () => {
+        setOpen(!open);
+    };
+
+    const listIsIterable = listItems.length > 0;
+
     return (
-        <div className="w-96 h-screen  bg-white border-dashed border-2 shadow-sm dark:bg-gray-800  flex flex-col">
-            <div className="p-4">
-                <h1 className="text-2xl font-bold  dark:text-gray-200">Navegación</h1>
-            </div>
-            <nav className="mt-5 flex-1">
-               
-                <Link href="/clients" className=" flex gap-3  py-2.5 px-4 dark:hover:bg-gray-700 hover:bg-gray-200 text-gray-700 dark:text-gray-300"> <FiUser/>Ver Clientes  </Link>
-                <Link href="/employees" className="flex gap-3 py-2.5 px-4 dark:hover:bg-gray-700 hover:bg-gray-200 text-gray-700 dark:text-gray-300"> <FiUsers/>Ver Empleados </Link>
-                <Link href="/products" className="flex gap-3 py-2.5 px-4 dark:hover:bg-gray-700 hover:bg-gray-200 text-gray-700 dark:text-gray-300 "> <FiArchive/>Ver Productos  </Link>
-               
-            </nav>
+        <div style={{ zIndex: 1 }}>
+            {/* Botón para abrir/cerrar */}
+            <Button onClick={toggleDrawer}>
+                <FiMenu />
+            </Button>
+
+            {/* Drawer para el sidebar */}
+            <Drawer
+                anchor="left"
+                open={open}
+                onClose={toggleDrawer}
+                sx={{
+                    "& .MuiDrawer-paper": {
+                        minWidth: 300,
+                        bgcolor: "background.default",
+                        opacity: 0.95,
+                    },
+                }}
+            >
+                <List>
+                    
+                    {listIsIterable ? (
+                        listItems.map(({ icon, name, path }, index) => (
+                            <ListItem key={index} disablePadding>
+                                <ListItemButton
+                                    component={Link}
+                                    href={path}
+                                    sx={{
+                                        color: "text.primary",
+                                        "&:hover": { bgcolor: "action.hover" },
+                                    }}
+                                >
+                                    {icon && (
+                                        <ListItemIcon sx={{ color: "text.secondary" }}>
+                                            {icon || <FiFolder />}
+                                        </ListItemIcon>
+                                    )}
+                                    <ListItemText primary={name} />
+                                </ListItemButton>
+                            </ListItem>
+                        ))
+                    ) : (
+                        <ListItem>
+                            <ListItemText primary="No hay elementos para mostrar" />
+                        </ListItem>
+                    )}
+                </List>
+            </Drawer>
         </div>
     );
 }
-  
+
 
