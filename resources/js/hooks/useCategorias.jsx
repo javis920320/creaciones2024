@@ -1,8 +1,11 @@
 import axios from "axios";
 import React, { useEffect, useMemo, useState } from "react";
+//import {categorias} from "./mackup.json"
+ 
 
-function useCategorias() {
+function useCategorias({search}) {
     const [categorias, setCategorias] = useState([]);
+    const[categoriaSerch,setCategoriaSerch]=useState([]);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
 
@@ -12,6 +15,7 @@ function useCategorias() {
             try {
                 setLoading(true);
                 const resp = await axios.get(route("categorias"));
+                
 
                 if (isMounted) {
                     
@@ -31,8 +35,8 @@ function useCategorias() {
         return () => {
             isMounted = false;
         };
-
-    }, []);
+        findCategoria()
+    }, [categorias]);
 
     const categoriememorize = useMemo(() => categorias, [categorias]);
 
@@ -48,7 +52,17 @@ function useCategorias() {
             : "Categoría no encontrada";
     };
 
-    return { categorias: categoriememorize, inforCategoria };
+const findCategoria=(search)=>{
+    if(!search){
+       setCategoriaSerch(  categorias)
+    }
+    const filtercategorias= categorias.find((categoria)=>categoria.nameCategory===search)
+    setCategoriaSerch(filtercategorias) ;
+
+}
+
+
+    return { categorias: categoriememorize, inforCategoria,categoriaSerch,findCategoria };
 }
 
 export default useCategorias;

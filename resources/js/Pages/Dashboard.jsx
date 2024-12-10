@@ -9,6 +9,9 @@ import Tablecobros from "@/Components/Cobros/Tablecobros";
 import { FiEdit, FiList, FiScissors } from "react-icons/fi";
 import Acordeon from "@/Components/Acordeon";
 import TableCostos from "@/Components/Asignacion/TableCostos";
+import ListaCategorias from "@/Components/Products/ListaCategorias";
+import PanelCategorias from "@/Components/Categorias/PanelCategorias";
+import ListOfAllOrders from "@/Components/Pedidos/ListOfAllOrders";
 
 export default function Dashboard({
     auth,
@@ -33,7 +36,7 @@ export default function Dashboard({
             <Head title="Dashboard" />
 
             <main className=" flex  ">
-                <Sidebar />
+                {/* <Sidebar /> */}
                 <div className=" w-full flex-col">
                     <div className="w-full flex flex-row justify-between m-2 p-4 items-center bg-white dark:bg-slate-900">
                         <Button
@@ -74,6 +77,9 @@ export default function Dashboard({
                         <Acordeon title="Saldo por cobrar en Almacen ">
                             <Tablecobros />
                         </Acordeon>
+                    </div>
+                    <div>
+                        <ListOfAllOrders />
                     </div>
                 </div>
             </main>

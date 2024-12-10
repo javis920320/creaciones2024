@@ -1,17 +1,194 @@
-import { Link, Head } from '@inertiajs/react';
+import UserIcon from "@/Icons/UserIcon";
+import { Link, Head } from "@inertiajs/react";
+import { FiActivity, FiClipboard, FiClock, FiPackage, FiSettings, FiShield, FiShoppingBag, FiShoppingCart, FiTrendingUp, FiUsers } from "react-icons/fi";
+function FeatureCard({ icon: Icon, title, description }) {
+    return (
+      <div className="bg-white p-6 rounded-xl shadow-lg hover:shadow-xl transition-shadow">
+        <div className="flex items-center justify-center w-12 h-12 bg-indigo-100 rounded-lg mb-4">
+          <Icon className="w-6 h-6 text-indigo-600" />
+        </div>
+        <h3 className="text-xl font-semibold mb-2 text-gray-800">{title}</h3>
+        <p className="text-gray-600">{description}</p>
+      </div>
+    );
+  }
 
 export default function Welcome({ auth, laravelVersion, phpVersion }) {
     const handleImageError = () => {
-        document.getElementById('screenshot-container')?.classList.add('!hidden');
-        document.getElementById('docs-card')?.classList.add('!row-span-1');
-        document.getElementById('docs-card-content')?.classList.add('!flex-row');
-        document.getElementById('background')?.classList.add('!hidden');
+        document
+            .getElementById("screenshot-container")
+            ?.classList.add("!hidden");
+        document.getElementById("docs-card")?.classList.add("!row-span-1");
+        document
+            .getElementById("docs-card-content")
+            ?.classList.add("!flex-row");
+        document.getElementById("background")?.classList.add("!hidden");
     };
 
     return (
         <>
             <Head title="Welcome" />
-            <div className="bg-gray-50 text-black/50 dark:bg-black dark:text-white/50">
+            <nav className="flex flex-1 justify-end ">
+                                {auth.user ? (
+                                    <Link
+                                        href={route('dashboard')}
+                                        className="rounded-md px-3 py-2 text-gray-500 dark:text-gray-100 ring-1 ring-transparent transition hover:text-black/70 focus:outline-none focus-visible:ring-[#FF2D20]  dark:hover:text-white/80 dark:focus-visible:ring-white"
+                                    >
+                                        Dashboard
+                                    </Link>
+                                ) : (
+                                    <>
+                                        <Link
+                                            href={route('login')}
+                                            className="rounded-md px-3 py-2 text-black ring-1 ring-transparent transition hover:text-black/70 focus:outline-none focus-visible:ring-[#FF2D20] dark:text-white dark:hover:text-white/80 dark:focus-visible:ring-white"
+                                        >
+                                            Log in
+                                        </Link>
+                                        <Link
+                                            href={route('register')}
+                                            className="rounded-md px-3 py-2 text-black ring-1 ring-transparent transition hover:text-black/70 focus:outline-none focus-visible:ring-[#FF2D20] dark:text-white dark:hover:text-white/80 dark:focus-visible:ring-white"
+                                        >
+                                            Register
+                                        </Link>
+                                    </>
+                                )}
+                            </nav>
+            <header className="relative bg-indigo-900 text-white">
+          
+                
+                <div className="absolute inset-0 overflow-hidden">
+                    
+                    <img
+                        src="https://images.unsplash.com/photo-1558769132-cb1aea458c5e?auto=format&fit=crop&q=80"
+                        alt="Fashion manufacturing"
+                        className="w-full h-full object-cover opacity-20"
+                    />
+                </div>
+                <div className="relative max-w-7xl mx-auto px-4 py-24 sm:px-6 lg:px-8">
+                    <div className="text-center">
+                        <h1 className="text-4xl md:text-6xl font-bold mb-6">
+                            Sistema Integral de Gestión de Confección
+                        </h1>
+                        <p className="text-xl md:text-2xl text-indigo-200 mb-8">
+                            Gestiona pedidos, clientes y producción en una única
+                            plataforma potente
+                        </p>
+                        <button className="bg-indigo-500 hover:bg-indigo-600 text-white px-8 py-3 rounded-lg text-lg font-semibold transition-colors">
+                            Comenzar Ahora
+                        </button>
+                    </div>
+                </div>
+            </header>
+            <section className="max-w-7xl mx-auto px-4 py-16 sm:px-6 lg:px-8">
+        <h2 className="text-3xl font-bold text-center mb-12 text-gray-800">
+          Módulos Principales
+        </h2>
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+          <FeatureCard
+            icon={UserIcon}
+            title="Gestión de Clientes"
+            description="Administra información detallada de clientes, historial de pedidos y preferencias"
+          />
+          <FeatureCard
+            icon={FiShoppingBag}
+            title="Gestión de Pedidos"
+            description="Control completo del ciclo de pedidos, desde la cotización hasta la entrega"
+          />
+          <FeatureCard
+            icon={FiPackage}
+            title="Gestión de Productos"
+            description="Catálogo completo de productos, materiales y especificaciones técnicas"
+          />
+          <FeatureCard
+            icon={FiClipboard}
+            title="Control de Producción"
+            description="Seguimiento en tiempo real del proceso de fabricación y control de calidad"
+          />
+          <FeatureCard
+            icon={FiUsers}
+            title="Gestión de Empleados"
+            description="Administración de personal, roles y asignación de tareas"
+          />
+          <FeatureCard
+            icon={FiSettings}
+            title="Configuración Avanzada"
+            description="Personalización completa del sistema según tus necesidades"
+          />
+           
+        </div>
+      </section>
+
+      {/* Benefits Section */}
+      <section className="bg-white py-16">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <h2 className="text-3xl font-bold text-center mb-12 text-gray-800">
+            Beneficios Clave
+          </h2>
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
+            <div className="text-center">
+              <div className="flex justify-center mb-4">
+                <FiActivity className="w-12 h-12 text-indigo-600" />
+              </div>
+              <h3 className="text-lg font-semibold mb-2">Optimización de Producción</h3>
+              <p className="text-gray-600">Mayor eficiencia en procesos productivos</p>
+            </div>
+            <div className="text-center">
+              <div className="flex justify-center mb-4">
+                <FiTrendingUp className="w-12 h-12 text-indigo-600" />
+              </div>
+              <h3 className="text-lg font-semibold mb-2">Control de Costos</h3>
+              <p className="text-gray-600">Mejor gestión de recursos y materiales</p>
+            </div>
+            <div className="text-center">
+              <div className="flex justify-center mb-4">
+                <FiShield className="w-12 h-12 text-indigo-600" />
+              </div>
+              <h3 className="text-lg font-semibold mb-2">Calidad Garantizada</h3>
+              <p className="text-gray-600">Seguimiento detallado de control de calidad</p>
+            </div>
+            <div className="text-center">
+              <div className="flex justify-center mb-4">
+                <FiClock className="w-12 h-12 text-indigo-600" />
+              </div>
+              <h3 className="text-lg font-semibold mb-2">Entregas a Tiempo</h3>
+              <p className="text-gray-600">Mejor planificación y cumplimiento</p>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* CTA Section */}
+      <section className="bg-indigo-900 text-white py-16">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+          <h2 className="text-3xl font-bold mb-8">
+            ¿Listo para revolucionar tu negocio de confección?
+          </h2>
+          <div className="flex flex-col sm:flex-row gap-4 justify-center">
+            <button className="bg-white text-indigo-900 px-8 py-3 rounded-lg text-lg font-semibold hover:bg-gray-100 transition-colors">
+              Solicitar Demo
+            </button>
+            <button className="border-2 border-white px-8 py-3 rounded-lg text-lg font-semibold hover:bg-indigo-800 transition-colors">
+              Contactar Ventas
+            </button>
+          </div>
+        </div>
+      </section>
+      <footer className="bg-gray-900 text-gray-300 py-8">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="flex flex-col md:flex-row justify-between items-center">
+            <div className="flex items-center mb-4 md:mb-0">
+              <FiShoppingCart className="w-8 h-8 mr-2 text-indigo-500" />
+              <span className="text-xl font-semibold">FashionERP</span>
+            </div>
+            <div className="flex gap-6">
+              <a href="#" className="hover:text-white transition-colors">Términos</a>
+              <a href="#" className="hover:text-white transition-colors">Privacidad</a>
+              <a href="#" className="hover:text-white transition-colors">Contacto</a>
+            </div>
+          </div>
+        </div>
+      </footer>
+            {/* <div className="bg-gray-50 text-black/50 dark:bg-black dark:text-white/50">
                 <img
                     id="background"
                     className="absolute -left-20 top-0 max-w-[877px]"
@@ -333,7 +510,7 @@ export default function Welcome({ auth, laravelVersion, phpVersion }) {
                         </footer>
                     </div>
                 </div>
-            </div>
+            </div> */}
         </>
     );
 }

@@ -118,7 +118,7 @@ const Submited = ({ pedido }) => {
                         <div className="flex items-center justify-between">
                             <p className="font-medium">Total</p>
                             <p className="font-medium">
-                                ${(subtotal + Domicilio).toFixed(2)}
+                                ${(subtotal + (envioDomicilio?Domicilio:0)).toFixed(2)}
                             </p>
                         </div>
                     </div>

@@ -103,7 +103,7 @@ const Create = ({ auth, empleado = null }) => {
                                         setData("genero", e.target.value)
                                     }
                                 >
-                                    <option selected disabled>
+                                    <option selected >
                                         Seleccione{" "}
                                     </option>
                                     <option value={"Masculino"}>
@@ -127,7 +127,7 @@ const Create = ({ auth, empleado = null }) => {
                                         setData("cargo", e.target.value)
                                     }
                                 >
-                                    <option selected disabled>
+                                    <option selected >
                                         Seleccione{" "}
                                     </option>
                                     <option value={"Operador"}>
@@ -166,7 +166,7 @@ const Create = ({ auth, empleado = null }) => {
                                 placeholder=""
                             ></TextInput>
                             <InputError
-                                message={errors.fechaContratacion}
+                                message={errors.fechaNacimiento}
                                 className="mt-2"
                             />
                         </div>

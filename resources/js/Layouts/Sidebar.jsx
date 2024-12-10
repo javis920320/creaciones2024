@@ -31,6 +31,7 @@ export default function Sidebar({ listItems = [] }) {
             <Drawer
                 anchor="left"
                 open={open}
+                variant="temporary"
                 onClose={toggleDrawer}
                 sx={{
                     "& .MuiDrawer-paper": {

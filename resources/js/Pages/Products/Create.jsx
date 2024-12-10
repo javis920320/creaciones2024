@@ -230,6 +230,7 @@ const Create = ({ auth, categorias, product = null }) => {
                     {images.length > 0 && (
                         <Section className="h-28 w-44">
                             PreviewProduct
+                            changes
                             <PreviewProduct images={images}></PreviewProduct>
                         </Section>
                     )}

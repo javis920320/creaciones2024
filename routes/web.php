@@ -69,7 +69,7 @@ Route::middleware('auth')->group(function(){
 
 Route::middleware('auth')->group(function(){
     Route::get('/categorias',[CategoriaController::class,'index'])->name('categoria.index');
-    Route::get("getcateogrias",[CategoriaController::class,"getCategorias"])->name("categorias");
+    Route::get("/getcateogrias",[CategoriaController::class,"getCategorias"])->name("categorias");
 
 
     Route::get("/categorias/{categoria}",[CategoriaController::class,'edit'])->name('categoria.edit');
@@ -131,6 +131,7 @@ Route::middleware('auth')->group(function(){
 
 Route::middleware('auth')->group(function(){
     Route::get('/listar',[PedidoController::class,"list"])->name("lista.pedidos");
+    Route::get("/listOfAllOrders",[PedidoController::class,'listAllOrders'])->name("listaAllpedidos");
     Route::get('/crear-pedidos',[PedidoController::class,'index'])->name('pedidos.index');
     Route::put('/pedido/{idpedido}',[PedidoController::class,'submit'])->name('pedido.submit');
     Route::get("/pedido/{pedidoenviado}",[PedidoController::class,'pedidoSubmited'])->name("pedido.send");
@@ -147,7 +148,10 @@ Route::middleware('auth')->group(function(){
 });
 
 Route::middleware('auth')->group(function(){
+    Route::get('/reports',[AlmacenReportController::class,'index'])->name('index');
     Route::get('/reportemensual',[AlmacenReportController::class,'index'])->name('index');
 });
+
+
 
 require __DIR__.'/auth.php';

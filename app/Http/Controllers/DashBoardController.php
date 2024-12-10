@@ -29,6 +29,7 @@ class DashBoardController extends Controller
         ->with('empleado') // Traer la relación con el empleado
         ->limit(100)
         ->get();
+        
 
 
         $costosproduccion = Asignacion::where("estado", "asignado")->sum("costo");

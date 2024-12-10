@@ -60,7 +60,7 @@ const Index = ({ auth, categorias, pedido, ordenes,iseditable=false }) => {
             <div className="flex gap-2 ">
                 <Section className="w-1/2">
                 
-                    <p className="text-gray-500 dark:text-gray-700">
+                    <p className="text-gray-500 dark:text-gray-200">
                         Complete el formulario para realizar su pedido.
                     </p>
                     <form onSubmit={handleSubmit}>
@@ -202,7 +202,7 @@ const Index = ({ auth, categorias, pedido, ordenes,iseditable=false }) => {
                     </form>
                         ):<Link href={route("corteConfeccion.index")}>Volver a lista</Link>}
 
-                        {JSON.stringify(editable)}
+                        
                     </div>
                 </div>
 

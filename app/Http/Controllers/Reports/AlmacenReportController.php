@@ -17,13 +17,14 @@ class AlmacenReportController extends Controller
     {
 
         //datos de cobros a almacen
-
+        return inertia("Reports/Index");
+/* 
         $cobros = Cobro::where("estado", "pendiente")->get();
         $pdf = PDF::loadView('PDF.reportemensual', compact('cobros'));
 
 
-       return  $pdf->stream();
-
+        return $pdf->stream();
+ */
     }
 
     /**
