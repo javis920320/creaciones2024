@@ -15,7 +15,7 @@ class ClientController extends Controller
     public function index()
     {
         $clients = Client::all();
-      
+
         return Inertia::render('Clients/Index', [
             'clients' => $clients
         ]);
@@ -46,7 +46,7 @@ class ClientController extends Controller
             'postal_code' => 'nullable|string|max:20',
             'country' => 'nullable|string|max:255',
             'birthday' => 'nullable|date',
-            'identification_number' =>'required|string|max:20|min:5|unique:clients|regex:/^[A-Za-z0-9]+$/',
+            'identification_number' => 'required|string|max:20|min:5|unique:clients|regex:/^[A-Za-z0-9]+$/',
             'gender' => 'nullable|in:male,female,other',
             'notes' => 'nullable|string',
             'status' => 'nullable|in:active,inactive',
@@ -106,18 +106,23 @@ class ClientController extends Controller
             'postal_code' => 'nullable|string|max:20',
             'country' => 'nullable|string|max:255',
             'birthday' => 'nullable|date',
-            'identification_number' =>'required|string|max:20|min:5|unique:clients|regex:/^[A-Za-z0-9]+$/',
+            'identification_number' => 'required|string|max:20|min:5|unique:clients,identification_number,'.$idclient->id.'|regex:/^[A-Za-z0-9]+$/',
             'gender' => 'nullable|in:male,female,other',
             'notes' => 'nullable|string',
             'status' => 'nullable|in:active,inactive',
         ]);
 
-
+        if($idclient->update($validatedData)){
+            return response()->json([
+                "cliente"=>$idclient
+            ]);
+        }
+/* 
         if ($idclient->update($validatedData)) {
             return redirect()->route('clients.index', $idclient->id)
                 ->with('success', 'Client updated successfully.');
         }
-        ;
+        ; */
 
 
 
@@ -135,16 +140,26 @@ class ClientController extends Controller
 
     public function serchClient($query)
     {
-  try {
-    $cliente = Client::where("identification_number", $query)->limit(1)->get();
+        try {
+            $cliente = Client::where("identification_number", $query)->limit(1)->get();
 
-        if (!$cliente) {
-            return response()->json(["error" => " client not found "]);
+            if (!$cliente) {
+                return response()->json(["error" => " client not found "]);
+            }
+            return response()->json($cliente);
+        } catch (\Throwable $th) {
+            return response()->json(["error" => " Error internal server "]);
         }
-        return response()->json($cliente);
-  } catch (\Throwable $th) {
-    return response()->json(["error" => " Error internal server "]);
-  }
-        
+
+    }
+
+    public function updateStatusClient(Client $client,Request $request)
+    {
+        $client->status=$request->status;
+        $client->save();
+         return response()->json([
+            "client"=>$client
+
+         ]);
     }
 }

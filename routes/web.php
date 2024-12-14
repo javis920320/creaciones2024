@@ -56,6 +56,7 @@ Route::middleware('auth')->group(function(){
     Route::get('/client/create',[ClientController::class,'create'])->name('client.create');
     Route::post('/client/store',[ClientController::class,'store'])->name('client.store');
     Route::get("/findClient/{query}",[ClientController::class,"serchClient"])->name("client.search");
+    Route::patch("/client/{client}",[ClientController::class ,"updateStatusClient"])->name("uptstatusclient");
 });
 
 Route::middleware('auth')->group(function(){
