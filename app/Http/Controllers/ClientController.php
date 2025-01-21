@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 use Inertia\Inertia;
 use App\Models\Client;
 use Illuminate\Support\Facades\Redirect;
+use Spatie\Permission\Traits\HasPermissions;
 
 class ClientController extends Controller
 {
@@ -14,13 +15,14 @@ class ClientController extends Controller
      */
     public function index()
     {
+
         $clients = Client::all();
 
         return Inertia::render('Clients/Index', [
             'clients' => $clients
         ]);
     }
-
+ 
     /**
      * Show the form for creating a new resource.
      */

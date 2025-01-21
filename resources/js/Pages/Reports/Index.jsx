@@ -2,8 +2,11 @@ import React from "react";
 import AuthenticatedLayout from "@/Layouts/AuthenticatedLayout";
 import { Head, useForm } from "@inertiajs/react";
 import { Box, Card, Container, Paper, Tab, Tabs } from "@mui/material";
+import Acordeon from "@/Components/Acordeon";
+import Tablecobros from "@/Components/Cobros/Tablecobros";
+import TableCostos from "@/Components/Asignacion/TableCostos";
 
-const Index = ({ auth }) => {
+const Index = ({ auth, asignaciones, costosproduccion }) => {
     return (
         <AuthenticatedLayout
             user={auth.user}
@@ -15,13 +18,25 @@ const Index = ({ auth }) => {
         >
             <Head title="Reporte Actividades" />
 
-            <Container sx={{ marginTop: "4px" }}>
-                <Card>
-                    <Tabs className="text-blue-200">
-                        <Tab label="Itme 1"></Tab>
-                        <Tab label="Item 3"></Tab>
-                    </Tabs>
-                </Card>
+            <Container sx={{ marginTop: "4px", display: "flex", gap: 2 }}>
+                <div className="flex flex-col">
+                    <Acordeon
+                        title={`Lista de costos empleados - $${
+                            !isNaN(Number(costosproduccion))
+                                ? Number(costosproduccion).toFixed(2)
+                                : "0.00"
+                        }`}
+                    >
+                        <TableCostos
+                            asignaciones={asignaciones}
+                            costosproduccion={costosproduccion}
+                        />
+                    </Acordeon>
+
+                    <Acordeon title="Saldo por cobrar en Almacen ">
+                        <Tablecobros /> 
+                    </Acordeon>
+                </div>
             </Container>
         </AuthenticatedLayout>
     );

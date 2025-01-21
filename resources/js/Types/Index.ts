@@ -1,0 +1,1 @@
+export type CustomerType="univesidad"|"empresa"|"particular"|"colegio"|"otro";   

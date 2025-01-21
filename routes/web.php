@@ -13,12 +13,15 @@ use App\Http\Controllers\OrderController;
 use App\Http\Controllers\PedidoController;
 use App\Http\Controllers\ProductController;
 use App\Http\Controllers\ProductImageController;
+use App\Http\Controllers\ProgramaController;
 use App\Http\Controllers\Reports\AlmacenReportController;
+use App\Http\Controllers\Roles\RolesController;
 use App\Models\Client;
 use App\Models\Empleado;
 use App\Models\Product;
 use Illuminate\Foundation\Application;
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\EntidadController;
 use Inertia\Inertia;
 
 Route::get('/', function () {
@@ -149,10 +152,55 @@ Route::middleware('auth')->group(function(){
 });
 
 Route::middleware('auth')->group(function(){
+    Route::get('/roles-permisos',[RolesController::class,'index'])->name('index');
+   
+});
+Route::middleware('auth')->group(function(){
     Route::get('/reports',[AlmacenReportController::class,'index'])->name('index');
     Route::get('/reportemensual',[AlmacenReportController::class,'index'])->name('index');
 });
 
 
+Route::middleware('auth')->group(function(){
+   Route::get('/neworder',[PedidoController::class,'orderv2'])->name('ingreso.pedido');
+});
+
+Route::middleware('auth')->group(function(){
+    Route::get('/entidades', [EntidadController::class, 'index'])->name('entidades.index');
+    Route::get('/entidades/create', [EntidadController::class, 'create'])->name('entidades.create');
+    Route::post('/entidades', [EntidadController::class, 'store'])->name('entidades.store');
+    Route::get('/entidades/{entidad}/edit', [EntidadController::class, 'edit'])->name('entidades.edit');
+    Route::put('/entidades/{entidad}', [EntidadController::class, 'update'])->name('entidades.update');
+    Route::delete('/entidades/{entidad}', [EntidadController::class, 'destroy'])->name('entidades.destroy');
+    Route::get("/entidades/{tipo}",[EntidadController::class,"entidadesTipo"])->name("entidades.tipo");
+});
+
+Route::middleware('auth')->group(function(){
+    Route::get('/cobros',[CobroController::class,'index'])->name('cobros.index');
+    Route::get('/cobros/create',[CobroController::class,'create'])->name('cobros.create');
+    Route::post('/cobros',[CobroController::class,'store'])->name('cobros.store');
+    Route::get('/cobros/{cobro}/edit',[CobroController::class,'edit'])->name('cobros.edit');
+    Route::put('/cobros/{cobro}',[CobroController::class,'update'])->name('cobros.update');
+    Route::delete('/cobros/{cobro}',[CobroController::class,'destroy'])->name('cobros.destroy');
+    Route::get("/cobros/{tipo}",[CobroController::class,"cobrosTipo"])->name("cobros.tipo");
+});
+
+Route::middleware('auth')->group(function(){
+    Route::get('/reports',[AlmacenReportController::class,'index'])->name('reports.index');
+    Route::get('/reports/create',[AlmacenReportController::class,'create'])->name('reports.create');
+    Route::post('/reports',[AlmacenReportController::class,'store'])->name('reports.store');
+    Route::get('/reports/{report}/edit',[AlmacenReportController::class,'edit'])->name('reports.edit');
+    Route::put('/reports/{report}',[AlmacenReportController::class,'update'])->name('reports.update');
+    Route::delete('/reports/{report}',[AlmacenReportController::class,'destroy'])->name('reports.destroy');
+    Route::get("/reports/{tipo}",[AlmacenReportController::class,"reportsTipo"])->name("reports.tipo");
+}); 
+
+Route::middleware('auth')->group(function(){
+Route::get("/programas",[ProgramaController::class,"index"])->name("programas.index");   
+Route::get("/programas/create",[ProgramaController::class,"create"])->name("programas.create");  
+Route::post("/programas",[ProgramaController::class,"store"])->name("programas.store");  
+Route::get("/programas/{programa}/edit",[ProgramaController::class,"edit"])->name("programas.edit"); 
+Route::put("/programas/{programa}",[ProgramaController::class,"update"])->name("programas.update");  
+});
 
 require __DIR__.'/auth.php';

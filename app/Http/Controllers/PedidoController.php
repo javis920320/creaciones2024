@@ -26,6 +26,11 @@ class PedidoController extends Controller
             "clients" => $clients
         ]);
     }
+    public function orderv2()
+    {
+    
+        return Inertia('Pedidos/v2/Index');
+    }
 
 
     public function list(Request $request)

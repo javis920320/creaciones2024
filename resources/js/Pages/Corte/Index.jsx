@@ -14,7 +14,6 @@ import { FiPrinter, FiSend } from "react-icons/fi";
 import { useCorteHook } from "./useCorteHook";
 import Acordeon from "@/Components/Acordeon";
 
-
 function IndeterminateCheckbox({ indeterminate, className = "", ...rest }) {
     const ref = useRef(null);
 
@@ -43,16 +42,15 @@ const Index = ({ auth }) => {
         setRowSelection,
         setData,
         pedidos,
-        imprimirPedidosSeleccionados
+        imprimirPedidosSeleccionados,
     } = useCorteHook();
 
-     const handlePrinter=()=>{
+    const handlePrinter = () => {
         const selectedRows = tableInstance.getSelectedRowModel().rows;
         // Mapear a los IDs de las filas seleccionadas
         const selectedIds = selectedRows.map((row) => row.original.id);
-        imprimirPedidosSeleccionados(selectedIds)
-
-     }
+        imprimirPedidosSeleccionados(selectedIds);
+    };
     const handleSubmit = () => {
         // Obtener las filas seleccionadas directamente
         const selectedRows = tableInstance.getSelectedRowModel().rows;
@@ -122,12 +120,9 @@ const Index = ({ auth }) => {
                 header: "Detalles",
                 accessorKey: "ordenes",
                 cell: ({ row }) => (
-                    
-
                     <Acordeon title={""}>
-                         {JSON.stringify(row.original.orden)}
+                        {JSON.stringify(row.original.orden)}
                         {row.original.ordenes.map((orden) => (
-                            
                             <li
                                 key={orden.id}
                                 className="border-b border-gray-300 pb-2"
@@ -147,9 +142,7 @@ const Index = ({ auth }) => {
                                 </p>
                             </li>
                         ))}
-                    
                     </Acordeon>
-                    
                 ),
             },
             {
@@ -166,10 +159,17 @@ const Index = ({ auth }) => {
                             </button>
                         </Dropdown.Trigger>
                         <Dropdown.Content align="right" width="48">
-                            
                             <Dropdown.Link href="#">Ver detalles</Dropdown.Link>
-                            <Dropdown.Link href={route("editar.envio",row.original.id)}>Editar</Dropdown.Link>
-                            <Dropdown.Link href={route("pedido.cancelar",row.original.id)}>Cancelar Pedido</Dropdown.Link>
+                            <Dropdown.Link
+                                href={route("editar.envio", row.original.id)}
+                            >
+                                Editar
+                            </Dropdown.Link>
+                            <Dropdown.Link
+                                href={route("pedido.cancelar", row.original.id)}
+                            >
+                                Cancelar Pedido
+                            </Dropdown.Link>
                             <Dropdown.Link href="#">Imprimir</Dropdown.Link>
                         </Dropdown.Content>
                     </Dropdown>
@@ -239,7 +239,10 @@ const Index = ({ auth }) => {
                             }
                             className="mr-2 p-2 border border-gray-300 rounded"
                         />
-                        <PrimaryButton onClick={handlePrinter} className="flex gap-3">
+                        <PrimaryButton
+                            onClick={handlePrinter}
+                            className="flex gap-3"
+                        >
                             <FiPrinter /> Imprimir
                         </PrimaryButton>
                         <PrimaryButton
@@ -277,31 +280,43 @@ const Index = ({ auth }) => {
                         </thead>
 
                         <tbody className="bg-white dark:bg-gray-800">
-                            {tableInstance.getRowModel().rows.map((row) => (
-                                <tr
-                                    key={row.original.id}
-                                    className="border-b dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-700"
-                                >
-                                    {row.getVisibleCells().map((cell) => (
-                                        <td
-                                            key={cell.id}
-                                            className="px-6 py-4 text-gray-900 dark:text-white"
-                                        >
-                                            {flexRender(
-                                                cell.column.columnDef.cell,
-                                                cell.getContext()
-                                            )}
-                                        </td>
-                                    ))}
+                            {datainstance.length === 0 ? (
+                                <tr>
+                                    <td
+                                        colSpan={
+                                            tableInstance.getAllColumns().length
+                                        }
+                                        className="px-6 py-4 text-center text-gray-900 dark:text-white"
+                                    >
+                                        No hay pedidos en este módulo.
+                                    </td>
                                 </tr>
-                            ))}
+                            ) : (
+                                tableInstance.getRowModel().rows.map((row) => (
+                                    <tr
+                                        key={row.original.id}
+                                        className="border-b dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-700"
+                                    >
+                                        {row.getVisibleCells().map((cell) => (
+                                            <td
+                                                key={cell.id}
+                                                className="px-6 py-4 text-gray-900 dark:text-white"
+                                            >
+                                                {flexRender(
+                                                    cell.column.columnDef.cell,
+                                                    cell.getContext()
+                                                )}
+                                            </td>
+                                        ))}
+                                    </tr>
+                                ))
+                            )}
                         </tbody>
                     </table>
                 </Section>
-                <Section>
+               {/*  <Section>
                     <h1>Pedidos Impresos hoy</h1>
-                    
-                </Section>
+                </Section> */}
                 {/* <Acordeon/> */}
             </div>
         </AuthenticatedLayout>

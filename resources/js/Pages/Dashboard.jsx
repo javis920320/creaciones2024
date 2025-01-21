@@ -15,14 +15,8 @@ import ListOfAllOrders from "@/Components/Pedidos/ListOfAllOrders";
 
 export default function Dashboard({
     auth,
-    clientes,
-    empleados,
-    products,
-    costosproduccion,
-    asignaciones,
-    cortes,
-    pendientesasignacion,
-    cobros,
+  
+   
 }) {
     return (
         <AuthenticatedLayout
@@ -60,24 +54,7 @@ export default function Dashboard({
                         </Button>
                     </div>
 
-                    <div className="flex flex-col">
-                        <Acordeon
-                            title={`Lista de costos empleados - $${
-                                !isNaN(Number(costosproduccion))
-                                    ? Number(costosproduccion).toFixed(2)
-                                    : "0.00"
-                            }`}
-                        >
-                            <TableCostos
-                                asignaciones={asignaciones}
-                                costosproduccion={costosproduccion}
-                            />
-                        </Acordeon>
-
-                        <Acordeon title="Saldo por cobrar en Almacen ">
-                            <Tablecobros />
-                        </Acordeon>
-                    </div>
+                 
                     <div>
                         <ListOfAllOrders />
                     </div>
