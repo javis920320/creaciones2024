@@ -20,7 +20,7 @@ const Index = ({ auth, products, categories }) => {
             <Head title="Lista de Productos "></Head>
             <div className="w-full flex gap-4">
             <PanelCategorias/>
-                <div className="flex dark:bg-gray-800 w-64 justify-center min-h-[90vh] overflow-y-scroll rounded">
+             {/*    <div className="flex dark:bg-gray-800 w-64 justify-center min-h-[90vh] overflow-y-scroll rounded">
                 
                     <ul className=" dark:bg-gray-900 w-full bg-white text-gray-700">
                         <li>
@@ -32,7 +32,7 @@ const Index = ({ auth, products, categories }) => {
                              <ListaCategorias categoria={categoria}/>                            
                         ))}
                     </ul>
-                </div>
+                </div> */}
                 <Link href={route("product.create")}>
                     <SecondaryButton>Crear +</SecondaryButton>
                 </Link>

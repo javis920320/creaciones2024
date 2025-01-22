@@ -19,6 +19,8 @@ return new class extends Migration
             $table->decimal("costo_produccion");
             $table->decimal("costoProduccionExtra")->nullable();
             $table->decimal("costoExterno")->nullable();
+            $table->string('sector')->nullable(); 
+            //$table->enum('sector',["Universidades","Colegios","Empresas","Otro"]);
             $table->enum('status',["Activo","Inactivo"])->default("Activo");
             $table->unsignedBigInteger('category_id');
             $table->foreign('category_id')->references('id')->on('categories')->onDelete('cascade');

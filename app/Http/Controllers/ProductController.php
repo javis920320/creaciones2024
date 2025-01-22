@@ -18,11 +18,15 @@ class ProductController extends Controller
     {
 
 
-        $products = Product::where('status', 'Activo')->orderBy('nameProduct')->get();
+        /* $products = Product::where('status', 'Activo')->orderBy('nameProduct')->get();
         $categories = Category::where('status', 'active')->orderBy('nameCategory')->get();
 
-        return Inertia::render("Products/Index", ['products' => ProductResource::collection($products), 'categories' => $categories]);
+        return Inertia::render("Products/Index", ['products' => ProductResource::collection($products), 'categories' => $categories]); */
+        $categorias=Category::where("status","active")->get();
+        return Inertia::render("Products/v2/Index",["categories"=>$categorias]);     
     }
+
+    
 
     /**
      * Show the form for creating a new resource.
@@ -42,11 +46,17 @@ class ProductController extends Controller
     {
 
 
-        // try {
+        try {
+                 // Asegúrate de que el valor de sector sea una cadena
+                 $request->merge([
+                    'sector' => is_array($request->sector) ? implode(',', $request->sector) : $request->sector,
+                ]);
+            
         $validateInfo = $request->validate([
             "nameProduct" => "required|min:5|unique:products,nameProduct", //,except,id",
             "category_id" => "required",
             "description" => "nullable",
+            "sector" => "nullable|string", //,in:Universidades,Colegios,Empresas,Otro",    
             "status" => "required",
             "price" => "required",
             "costo_produccion" => "required",
@@ -69,12 +79,14 @@ class ProductController extends Controller
 
 
 
-            return redirect()->route("products.index");
+           // return redirect()->route("products.index");
+           return response()->json(["success"=>"Producto creado correctamente","product"=>$resp]);  
         }
 
-        /* } catch (\Throwable $th) {
-            echo $th;
-        } */
+         } catch (\Throwable $th) {
+          //  echo $th;
+          return response()->json(["error"=>"Error al crear el producto","message"=>$th->getMessage()]);    
+        } 
     }
 
     /**

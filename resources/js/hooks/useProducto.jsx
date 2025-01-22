@@ -21,7 +21,24 @@ function useProducto(idcategoria = []) {
         }
     }, []);
 
-    return { obtenerProductosconcategoria, products, errorsProduct };
+    const createProducto = async (data) => {
+        try {
+            
+           const resp= await axios.post(route("product.store"), data);
+           
+         
+              return resp.data; 
+         
+
+            //obtenerProductosconcategoria(idcategoria);
+
+        } catch (error) {
+            console.log(error.response)
+            setErrorProducts(error);
+        }
+    };
+
+    return { obtenerProductosconcategoria, products, errorsProduct,createProducto };
 }
 
 export default useProducto;

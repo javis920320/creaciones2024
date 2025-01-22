@@ -98,6 +98,11 @@ Route::middleware('auth')->group(function(){
 });
 
 
+//route for new product
+Route::middleware('auth')->group(function(){
+    Route::get('/newproduct',[ProductController::class,'newproduct'])->name('newproduct');
+}); 
+
 Route::middleware('auth')->group(function(){
     
     
