@@ -1,93 +1,63 @@
-import React, { useState } from "react";
+import React, { useMemo, useState } from "react";
 import AuthenticatedLayout from "@/Layouts/AuthenticatedLayout";
 import { Head } from "@inertiajs/react";
 
 import {
     Alert,
+    Box,
     Button,
+    Card,
     Chip,
+    Container,
     Dialog,
     DialogActions,
     DialogContent,
     DialogContentText,
     DialogTitle,
     Divider,
-    MenuItem,
-    Select,
     Snackbar,
-    TextField,
 } from "@mui/material";
-import { Label } from "@mui/icons-material";
-import { set } from "lodash";
-import useProducto from "@/hooks/useProducto";
-import DropzoneProductImages from "@/Components/Dropzone/DropzoneProductImages";
+import ProductForm from "@/Components/Products/ProductForm";
+import useCategorias from "@/hooks/useCategorias";
+import PanelCategorias from "@/Components/Categorias/PanelCategorias";
 
-const Index = ({ auth, categories }) => {
+import useProducto from "@/hooks/useProducto";
+import ProductCard from "@/Components/Products/ProductCard";
+
+const Index = ({ auth, categories, products }) => {
     const [snackbarOpen, setSnackbarOpen] = useState(false);
     const [snackbarMessage, setSnackbarMessage] = useState("");
     const [snackbarSeverity, setSnackbarSeverity] = useState("success");
+
     const [open, setOpen] = useState(false);
-
-   
-    const resetForm = () => {
-        setFormData({
-            nameProduct: "",
-            price: "",
-            category_id: "",
-            sector: [],
-            images_url: "",
-            description: "",
-            costo_produccion: "",
-            costoProduccionExtra: "",
-            costoExterno: "",
-            status: "Activo",
-        });
+    const [sectorFilter, setSectorFilter] = useState([]);
+    const toogleSector = (sector) => {
+        setSectorFilter((prev) =>
+            prev.includes(sector)
+                ? prev.filter((sec) => sec !== sector)
+                : [...prev, sector]
+        );
     };
+    const [categorysFilter, setCategorysFilter] = useState([]);
+    
 
-    const { createProducto } = useProducto();
     const [sector, setSector] = useState([
+        //"Todos",
         "Universidad",
         "Colegios",
         "Empresas",
         "Otros",
     ]);
+    const filteredProducts = useMemo(() => { 
+        return products.data.filter((product) => {
+            const sectorMatch= sectorFilter.length === 0 || sectorFilter.includes(product.sector);  
+            const categoryMatch = categorysFilter.length === 0 || categorysFilter.includes(product.category_id);   
+            return sectorMatch && categoryMatch;
+        })},[sectorFilter, categorysFilter, products.data]);
     const handleSnackbarClose = () => {
         setSnackbarOpen(false);
     };
-    const [formData, setFormData] = useState({
-        nameProduct: "",
-        price: "",
-        category_id: "",
-        sector: [],
-        images_url: "",
-        description: "",
-        costo_produccion: "",
-        costoProduccionExtra: "",
-        costoExterno: "",
-        status: "Activo",
-    });
-    const handleSubmit = async (e) => {
-        e.preventDefault();
-        const resp = await createProducto(formData);
-        if (resp.error) {
-            setSnackbarMessage(resp.error);
-            setSnackbarSeverity("error");
-        } else {
-            setSnackbarMessage("Producto creado con éxito");
-            setSnackbarSeverity("success");
-            resetForm();
- 
-        }
-        setSnackbarOpen(true);
-    };
-    const toogleSector = (sector) => {
-        setFormData((prev) => ({
-            ...prev,
-            sector: prev.sector.includes(sector)
-                ? prev.sector.filter((sec) => sec !== sector)
-                : [...prev.sector, sector],
-        }));
-    };
+
     const handleClickOpen = () => {
         setOpen(true);
     };
@@ -113,139 +83,65 @@ const Index = ({ auth, categories }) => {
             >
                 Abrir Diálogo
             </Button>
+            <Container maxWidth="lg" sx={{ display: "flex", flexDirection: "row", gap : 2 , mt: 4 }}>     
+                <Card
+                    sx={{
+                        width: 500,
+                        height: 600,
+                        overflow: "auto",
+                      
+                        p: 2,
+                    }}
+                >
+                    <h1>Filtros</h1>
+                    <Box sx={{ my: 2 }}>
+                        <p className="text-gray-400">Sector</p>
+                        {sector.map((sector) => (
+                            <Chip
+                                key={sector}
+                                label={sector}
+                                onClick={() => toogleSector(sector)}
+                                variant={
+                                    sectorFilter.includes(sector)
+                                        ? "filled"
+                                        : "outlined"
+                                }
+                            />
+                        ))}
+                    </Box>
+                    <Divider />
+              
+                    <Box sx={{ my: 2 }}>
+                        <PanelCategorias
+                            setCategorysFilter={setCategorysFilter}
+                            categorysFilter={categorysFilter}
+                        />
+
+                    </Box>
+                    <Divider />
+                </Card>
+                <Box className=" grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-3 gap-4 p-4 ">    
+                  
+                        {filteredProducts.map((product) => (
+                            <ProductCard key={product.id} product={product} />
+                        ))} 
+                </Box>
+            </Container>
+           
+
             <Dialog open={open} onClose={handleClose}>
                 <DialogTitle>Crear Producto</DialogTitle>
                 <DialogContent>
                     <DialogContentText>
                         Por favor, ingrese los detalles del producto.
                     </DialogContentText>
-                 
-                 
-                    <form onSubmit={handleSubmit}>
-                        <TextField
-                            autoFocus
-                            margin="dense"
-                            id="name"
-                            label="Nombre del Producto"
-                            type="text"
-                            fullWidth
-                            value={formData.nameProduct}
-                            onChange={(e) =>
-                                setFormData((prev) => ({
-                                    ...prev,
-                                    nameProduct: e.target.value,
-                                }))
-                            }
-                        />
-                        <Select
-                            fullWidth
-                            value={formData.category_id}
-                            onChange={(e) =>
-                                setFormData((prev) => ({
-                                    ...prev,
-                                    category_id: e.target.value,
-                                }))
-                            }
-                        >
-                            {categories.map((category) => (
-                                <MenuItem key={category.id} value={category.id}>
-                                    {category.nameCategory}
-                                </MenuItem>
-                            ))}
-                        </Select>
-                        <TextField
-                            margin="dense"
-                            id="description"
-                            label="Descripción"
-                            value={formData.description}
-                            onChange={(e) =>
-                                setFormData((prev) => ({
-                                    ...prev,
-                                    description: e.target.value,
-                                }))
-                            }
-                            type="text"
-                            fullWidth
-                        />
-                        <TextField
-                            margin="dense"
-                            id="price"
-                            label="Precio"
-                            type="number"
-                            value={formData.price}
-                            onChange={(e) =>
-                                setFormData((prev) => ({
-                                    ...prev,
-                                    price: e.target.value,
-                                }))
-                            }
-                            fullWidth
-                        />
-                        <section className="py-2">
-                            <Label>Sector</Label>
 
-                            {sector.map((sector) => (
-                                <Chip
-                                    key={sector}
-                                    label={sector}
-                                    onClick={() => toogleSector(sector)}
-                                    variant={
-                                        formData.sector.includes(sector)
-                                            ? "filled"
-                                            : "outlined"
-                                    }
-                                />
-                            ))}
-                        </section>
-                        <Divider />
-                        Costos de Elaboracion
-                        <TextField
-                            margin="dense"
-                            id="costo_produccion"
-                            label="Costo de Producción"
-                            type="number"
-                            value={formData.costo_produccion}
-                            onChange={(e) =>
-                                setFormData((prev) => ({
-                                    ...prev,
-                                    costo_produccion: e.target.value,
-                                }))
-                            }
-                            fullWidth
-                        />
-                        <TextField
-                            margin="dense"
-                            id="costoProduccionExtra"
-                            label="Costo de Producción Extra"
-                            type="number"
-                            value={formData.costoProduccionExtra}
-                            onChange={(e) =>
-                                setFormData((prev) => ({
-                                    ...prev,
-                                    costoProduccionExtra: e.target.value,
-                                }))
-                            }
-                            fullWidth
-                        />
-                        <TextField
-                            margin="dense"
-                            id="costoExterno"
-                            label="Costo Externo"
-                            type="number"
-                            value={formData.costoExterno}
-                            onChange={(e) =>
-                                setFormData((prev) => ({
-                                    ...prev,
-                                    costoExterno: e.target.value,
-                                }))
-                            }
-                            fullWidth
-                        />
-                     <DropzoneProductImages setData={setFormData} setSnackbarOpen={setSnackbarOpen} setSnackbarMessage={setSnackbarMessage} setSnackbarSeveryty={setSnackbarSeverity}/> 
-                        <Button type="submit" color="primary">
-                            Guardar
-                        </Button>
-                    </form>
+                    <ProductForm
+                        categories={categories}
+                        setSnackbarMessage={setSnackbarMessage}
+                        setSnackbarOpen={setSnackbarOpen}
+                        setSnackbarSeverity={setSnackbarSeverity}
+                    />
                 </DialogContent>
                 <DialogActions>
                     <Button onClick={handleClose} color="primary">

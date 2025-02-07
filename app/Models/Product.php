@@ -12,12 +12,12 @@ class Product extends Model
 {
     use HasFactory;
 
-    protected $fillable = ["id","nameProduct","category_id", "description", "status","price","costo_produccion","costoProduccionExtra","costoExterno","sector"];
+    protected $fillable = ["id","nameProduct","category_id", "description", "status","price","costo_produccion","costoProduccionExtra","costoExterno","sector","entidad_id","program","slug"];  
     public  function category()
     {
         return $this->belongsTo(Category::class);
     }
-     public function imagenes(){
+     public function images(){
         return $this->hasMany(Product_image::class); 
      }
 }

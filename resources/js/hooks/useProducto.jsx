@@ -3,6 +3,37 @@ import { useEffect, useState } from "react";
 
 function useProducto(idcategoria = []) {
     const [errorsProduct, setErrorProducts] = useState(null);
+    const [formData, setFormData] = useState({
+        nameProduct: "",
+        price: "",
+        category_id: "",
+        sector: [],
+        images_url: "",
+        description: "",
+        costo_produccion: "",
+        costoProduccionExtra: "",
+        costoExterno: "",
+        status: "Activo",
+        detalles:{
+            entidad_id: "",
+            program: "",    
+        }
+    });
+        const resetForm = () => {
+            setFormData({
+                nameProduct: "",
+                price: "",
+                category_id: "",
+                sector: [],
+                images_url: "",
+                description: "",
+                costo_produccion: "",
+                costoProduccionExtra: "",
+                costoExterno: "",
+                status: "Activo",
+            });
+        };
+    
     const [products, setproducts] = useState([]);
     const obtenerProductosconcategoria = async (idcategoria) => {
         try {
@@ -38,7 +69,7 @@ function useProducto(idcategoria = []) {
         }
     };
 
-    return { obtenerProductosconcategoria, products, errorsProduct,createProducto };
+    return { obtenerProductosconcategoria, products, errorsProduct,createProducto, formData, setFormData ,resetForm}; 
 }
 
 export default useProducto;

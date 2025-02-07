@@ -5,10 +5,19 @@ import useCategorias from '@/hooks/useCategorias';
 import { Link } from '@inertiajs/react';
 import { EditRoadSharp } from '@mui/icons-material';
 import { LucidePencil } from '@/Icons/Pencil';
+import useProducto from '@/hooks/useProducto';
 
-const PanelCategorias = () => {
+const PanelCategorias = ({setCategorysFilter, categorysFilter}) => {
   const [search, setSearch] = useState('');
+ 
   const { categorias, categoriaSearch, loading, error } = useCategorias({ search });
+  const handleClick = (categoria) => {
+  setCategorysFilter((prev) =>
+    prev.includes(categoria)
+      ? prev.filter((cat) => cat !== categoria)
+      : [...prev, categoria]
+  );  
+  }
 
   const handleChange = (e) => {
     setSearch(e.target.value);
@@ -17,7 +26,8 @@ const PanelCategorias = () => {
   const isrenderizable = categoriaSearch.length > 0;
 
   return (
-    <Card sx={{ height: 400, overflow: 'auto' }}>           
+   /*  <Card sx={{ height: 400, overflow: 'auto' }}>     */ 
+   <>      
       <TextField
         name="categoriaserch"
         size="small"
@@ -35,7 +45,7 @@ const PanelCategorias = () => {
         <MenuList>
           {isrenderizable ? (
             categoriaSearch.map(({ id, nameCategory }) => (
-              <MenuItem key={id}>
+              <MenuItem key={id} onClick={()=>handleClick(id)} selected={categorysFilter.includes(id)}>  
                 <Typography variant="body2" sx={{ color: 'GrayText',mr:2 }}>
                   
                   <Link href={route("categoria.edit",id)}><LucidePencil/></Link>
@@ -55,8 +65,9 @@ const PanelCategorias = () => {
             <li>No renderizable</li>
           )}
         </MenuList>
-     
-    </Card>
+      
+    {/* </Card> */}
+    </>
   );
 };
 

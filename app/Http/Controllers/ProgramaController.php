@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Entidad;
 use App\Models\Programa;
 use Illuminate\Http\Request;
 
@@ -12,7 +13,7 @@ class ProgramaController extends Controller
      */
     public function index()
     {
-        //
+
     }
 
     /**
@@ -28,25 +29,25 @@ class ProgramaController extends Controller
      */
     public function store(Request $request)
     {
-    
+
         try {
             $request->validate([
                 'nombre' => 'required|string|max:255',
-                'entidad_id' => 'nullable|integer', 
+                'entidad_id' => 'nullable|integer',
             ]);
             $programa = new Programa();
-            if(!$programa->ProgramaandEntidad($request->nombre,$request-> entidad_id )){
-            $programa->nombre = $request->nombre;
-            $programa->entidad_id = $request->entidad_id;
-            $programa->save();
-            return response()->json(['success' => 'Programa created successfully.', 'newprograma' => $programa]);
-            }else{
+            if (!$programa->ProgramaandEntidad($request->nombre, $request->entidad_id)) {
+                $programa->nombre = $request->nombre;
+                $programa->entidad_id = $request->entidad_id;
+                $programa->save();
+                return response()->json(['success' => 'Programa created successfully.', 'newprograma' => $programa]);
+            } else {
                 return response()->json(['error' => 'Programa ya existe.']);
             }
-            
+
         } catch (\Exception $e) {
             return response()->json(['error' => 'Error creating programa.', 'message' => $e->getMessage()])->setStatusCode(500);
-        }   
+        }
     }
 
     /**
@@ -79,5 +80,19 @@ class ProgramaController extends Controller
     public function destroy(Programa $programa)
     {
         //
+    }
+
+    public function programsWithEntidad(Entidad $entidad)
+    {
+
+        try {
+            return response()->json(["programs" => $entidad->programas()->get()]);
+        } catch (\Throwable $th) {
+            //throw $th;
+            return response()->json(["error"=>$th]);
+        }
+
+
+
     }
 }

@@ -1,7 +1,7 @@
 import axios from "axios";
 import { useEffect, useState } from "react";
 
-function useCategorias({ search }) {
+function useCategorias({ search =""}) {  
   const [categorias, setCategorias] = useState([]);
   const [categoriaSearch, setCategoriaSearch] = useState([]);
   const [loading, setLoading] = useState(true);

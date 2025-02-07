@@ -206,6 +206,7 @@ Route::get("/programas/create",[ProgramaController::class,"create"])->name("prog
 Route::post("/programas",[ProgramaController::class,"store"])->name("programas.store");  
 Route::get("/programas/{programa}/edit",[ProgramaController::class,"edit"])->name("programas.edit"); 
 Route::put("/programas/{programa}",[ProgramaController::class,"update"])->name("programas.update");  
+Route::get("/programas/{entidad}",[ProgramaController::class,"programsWithEntidad"])->name("programas.entidad");
 });
 
 require __DIR__.'/auth.php';

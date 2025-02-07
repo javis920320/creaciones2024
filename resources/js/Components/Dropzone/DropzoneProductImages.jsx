@@ -57,7 +57,7 @@ const DropzoneProductImages = ({ setData,setSnackbarMessage,setSnackbarSeveryty,
 
   const { getRootProps, getInputProps, isDragActive } = useDropzone({
     onDrop,
-    accept: "image/*",
+    accept:"image/jpeg, image/png, image/gif",
     maxFiles: 3,
   });
 

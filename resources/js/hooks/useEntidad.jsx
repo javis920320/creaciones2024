@@ -1,3 +1,4 @@
+import axios from "axios";
 import { useState } from "react";
 
 export function useEntidad() {
@@ -36,6 +37,7 @@ export function useEntidad() {
     };
 
      const getEntidadforType = async (tipo) => {
+         console.log(tipo)
         setErrorEntidad(null);
         try {
             const response = await fetch(route("entidades.tipo", { tipo: tipo }), {
@@ -58,6 +60,8 @@ export function useEntidad() {
             return { error: error.message };
         }      
     }
+
+
     const programaNuevo = async (data) => { 
 
         
@@ -87,6 +91,12 @@ export function useEntidad() {
         }             
     }
 
+     const getProgramsforIdEntidad=async(entidad)=>{
+       
+          const resp=await axios(route("programas.entidad",entidad));
+        return resp;
 
-    return { postEntidad ,getEntidadforType,entidadesTipo,programaNuevo};
+     }
+
+    return { postEntidad ,getEntidadforType,entidadesTipo,programaNuevo,getProgramsforIdEntidad};
 }

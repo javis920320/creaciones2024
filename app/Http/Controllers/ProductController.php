@@ -8,6 +8,7 @@ use App\Models\Product;
 use App\Models\Product_image;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
+use Illuminate\Support\Str;
 
 class ProductController extends Controller
 {
@@ -18,12 +19,14 @@ class ProductController extends Controller
     {
 
 
-        /* $products = Product::where('status', 'Activo')->orderBy('nameProduct')->get();
+         $productsdb = Product::where('status', 'Activo')->orderBy('nameProduct')->get();
+        $products = ProductResource::collection($productsdb);   
+   
         $categories = Category::where('status', 'active')->orderBy('nameCategory')->get();
 
-        return Inertia::render("Products/Index", ['products' => ProductResource::collection($products), 'categories' => $categories]); */
+        //return Inertia::render("Products/Index", ['products' => ProductResource::collection($products), 'categories' => $categories]); */
         $categorias=Category::where("status","active")->get();
-        return Inertia::render("Products/v2/Index",["categories"=>$categorias]);     
+        return Inertia::render("Products/v2/Index",["categories"=>$categorias,"products"=>$products ]);      
     }
 
     
@@ -61,9 +64,22 @@ class ProductController extends Controller
             "price" => "required",
             "costo_produccion" => "required",
             "costoProduccionExtra" => "nullable",
-            "costoExterno" => "nullable"
+            "costoExterno" => "nullable",
+            "detalle" => "nullable",  
+            "slug" => "nullable|unique:products,slug",  
 
         ]);
+         // Generar un slug automáticamente si no se proporciona uno
+         if (empty($validateInfo['slug'])) {
+            $validateInfo['slug'] = Str::slug($validateInfo['nameProduct']);
+        }
+
+        if($request->detalles){
+            $validateInfo["entidad_id"]=$request->detalles["entidad_id"];    
+            $validateInfo["program"]=$request->detalles["program"];  
+            
+        }
+
         $resp = Product::create($validateInfo);
 
         if ($resp) {
@@ -173,6 +189,8 @@ class ProductController extends Controller
         return Inertia::render("Products/Index", ['products' => ProductResource::collection($productos), 'categories' => $categories]); 
 
     }
+
+
 
     public  function productoconcategoria( $category){
         

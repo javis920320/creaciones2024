@@ -3,6 +3,8 @@
 namespace Database\Factories;
 
 use App\Models\Category;
+use App\Models\Entidad;
+use App\Models\Programa;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
 /**
@@ -26,6 +28,11 @@ class ProductFactory extends Factory
             "costo_produccion"=>$this->faker->numberBetween(3000,10000),
             "costoProduccionExtra"=>$this->faker->numberBetween(3000,10000),
             "costoExterno"=>$this->faker->numberBetween(3000,10000),
+            "sector"=>$this->faker->randomElement(["Universidades","Colegios","Empresas","Otro"]),  
+            "status"=>$this->faker->randomElement(["Activo","Inactivo"]),   
+            "entidad_id"=>Entidad::factory(),   
+            "program"=>Programa::factory(),
+            "slug"=>$this->faker->unique->slug(),      
            // 'size' => $this->faker->randomElement(['S', 'M', 'L', 'XL']),
            // 'color' => $this->faker->colorName,
             //'stock' => $this->faker->numberBetween(0, 100),
