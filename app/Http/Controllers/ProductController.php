@@ -8,6 +8,7 @@ use App\Models\Product;
 use App\Models\Product_image;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
+use Illuminate\Support\Str;
 
 class ProductController extends Controller
 {
@@ -18,11 +19,18 @@ class ProductController extends Controller
     {
 
 
-        $products = Product::where('status', 'Activo')->orderBy('nameProduct')->get();
+         $productsdb = Product::where('status', 'Activo')->orderBy('nameProduct')->get();
+        $products = ProductResource::collection($productsdb);   
+   
         $categories = Category::where('status', 'active')->orderBy('nameCategory')->get();
 
-        return Inertia::render("Products/Index", ['products' => ProductResource::collection($products), 'categories' => $categories]);
+        //return Inertia::render("Products/Index", ['products' => ProductResource::collection($products), 'categories' => $categories]); */
+        $categorias=Category::where("status","active")->get();
+        return Inertia::render("Products/v2/Index",["categories"=>$categorias,"products"=>$products ]);      
     }
+
+  
+    
 
     /**
      * Show the form for creating a new resource.
@@ -42,18 +50,37 @@ class ProductController extends Controller
     {
 
 
-        // try {
+        try {
+                 // Asegúrate de que el valor de sector sea una cadena
+                 $request->merge([
+                    'sector' => is_array($request->sector) ? implode(',', $request->sector) : $request->sector,
+                ]);
+            
         $validateInfo = $request->validate([
             "nameProduct" => "required|min:5|unique:products,nameProduct", //,except,id",
             "category_id" => "required",
             "description" => "nullable",
+            "sector" => "nullable|string", //,in:Universidades,Colegios,Empresas,Otro",    
             "status" => "required",
             "price" => "required",
             "costo_produccion" => "required",
             "costoProduccionExtra" => "nullable",
-            "costoExterno" => "nullable"
+            "costoExterno" => "nullable",
+            "detalle" => "nullable",  
+            "slug" => "nullable|unique:products,slug",  
 
         ]);
+         // Generar un slug automáticamente si no se proporciona uno
+         if (empty($validateInfo['slug'])) {
+            $validateInfo['slug'] = Str::slug($validateInfo['nameProduct']);
+        }
+
+        if($request->detalles){
+            $validateInfo["entidad_id"]=$request->detalles["entidad_id"];    
+            $validateInfo["program"]=$request->detalles["program"];  
+            
+        }
+
         $resp = Product::create($validateInfo);
 
         if ($resp) {
@@ -69,12 +96,14 @@ class ProductController extends Controller
 
 
 
-            return redirect()->route("products.index");
+           // return redirect()->route("products.index");
+           return response()->json(["success"=>"Producto creado correctamente","product"=>$resp]);  
         }
 
-        /* } catch (\Throwable $th) {
-            echo $th;
-        } */
+         } catch (\Throwable $th) {
+          //  echo $th;
+          return response()->json(["error"=>"Error al crear el producto","message"=>$th->getMessage()]);    
+        } 
     }
 
     /**
@@ -162,6 +191,8 @@ class ProductController extends Controller
 
     }
 
+
+
     public  function productoconcategoria( $category){
         
         $products = Product::where("category_id", $category)->get();
@@ -174,4 +205,13 @@ class ProductController extends Controller
         return response()->json($products); 
 
     }
+    public function getAllProducts()
+    {
+        dd("hola"); 
+        $productsdb = Product::where('status', 'Activo')->orderBy('nameProduct')->get();
+        $products = ProductResource::collection($productsdb);   
+        
+        return response()->json($products);
+    }   
+
 }

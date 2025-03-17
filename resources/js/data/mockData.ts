@@ -1,0 +1,1 @@
+export const customerTypes=["Universidad","empresa","particular","colegio","otro"]; 

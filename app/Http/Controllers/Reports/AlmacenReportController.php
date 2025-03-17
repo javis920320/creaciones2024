@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Reports;
 
 use App\Http\Controllers\Controller;
+use App\Models\Asignacion;
 use App\Models\Cobro;
 use Barryvdh\DomPDF\Facade\Pdf;
 
@@ -16,14 +17,13 @@ class AlmacenReportController extends Controller
     public function index()
     {
 
-        //datos de cobros a almacen
+       
+        $asignacion = new Asignacion();
+        $Listasignaciones = $asignacion->obtenerAsignaciones();
+        $costosproduccion = $asignacion->obtenerCostosProduccion();
 
-        $cobros = Cobro::where("estado", "pendiente")->get();
-        $pdf = PDF::loadView('PDF.reportemensual', compact('cobros'));
-
-
-       return  $pdf->stream();
-
+        return inertia("Reports/Index",["costosproduccion" => $costosproduccion, "asignaciones" => $Listasignaciones]); 
+        
     }
 
     /**

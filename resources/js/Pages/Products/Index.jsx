@@ -6,6 +6,7 @@ import SecondaryButton from "@/Components/SecondaryButton";
 import { LucidePencil } from "@/Icons/Pencil";
 import CardProduct from "@/Components/Products/CardProduct";
 import ListaCategorias from "@/Components/Products/ListaCategorias";
+import PanelCategorias from "@/Components/Categorias/PanelCategorias";
 const Index = ({ auth, products, categories }) => {
     return (
         <AuthenticatedLayout
@@ -18,7 +19,9 @@ const Index = ({ auth, products, categories }) => {
         >
             <Head title="Lista de Productos "></Head>
             <div className="w-full flex gap-4">
-                <div className="flex dark:bg-gray-800 w-64 justify-center min-h-[90vh] overflow-y-scroll rounded">
+            <PanelCategorias/>
+             {/*    <div className="flex dark:bg-gray-800 w-64 justify-center min-h-[90vh] overflow-y-scroll rounded">
+                
                     <ul className=" dark:bg-gray-900 w-full bg-white text-gray-700">
                         <li>
                             <SecondaryButton className="w-full">
@@ -29,7 +32,7 @@ const Index = ({ auth, products, categories }) => {
                              <ListaCategorias categoria={categoria}/>                            
                         ))}
                     </ul>
-                </div>
+                </div> */}
                 <Link href={route("product.create")}>
                     <SecondaryButton>Crear +</SecondaryButton>
                 </Link>

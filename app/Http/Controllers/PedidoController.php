@@ -26,6 +26,11 @@ class PedidoController extends Controller
             "clients" => $clients
         ]);
     }
+    public function orderv2()
+    {
+    
+        return Inertia('Pedidos/v2/Index');
+    }
 
 
     public function list(Request $request)
@@ -61,6 +66,53 @@ class PedidoController extends Controller
         ];
     }
 
+
+    public function listAllOrders(Request $request)
+    {
+
+        $filterFactura = $request->get("factura");
+
+        $perPage = $request->get('per_page', 20); // Número de elementos por página
+        //$estado = $request->get('estado', 'Producción en curso'); // Estado por defecto
+        if ($filterFactura) {
+            
+        //    $pedidos = Pedido::where('estado', $estado)
+        $pedidos=Pedido::all()
+                ->where(function ($query) use ($filterFactura) {
+                    $query->where('factura', 'like', "%{$filterFactura}%");
+                })
+                ->paginate($perPage);
+                
+        } else {
+            
+            
+            $pedidos = Pedido::wherein('estado',['Pedido creado',
+                'Pedido enviado',
+                'Pedido recibido', 
+                'Pedido confirmado', 
+                'Materiales en stock', 
+                'Producción en curso', 
+                'Control de calidad', 
+                'Empaquetado', 
+                'Enviado', 
+                'Entregado', 
+                'Pedido completado', 
+                'Cancelado'])->paginate($perPage);
+            
+            //Pedido::where('estado', $estado)
+
+                
+        }
+
+
+
+        return [
+            'data' => PedidoResource::collection($pedidos), // Transformar los datos
+            'current_page' => $pedidos->currentPage(),
+            'total_pages' => $pedidos->lastPage(),
+            'total_items' => $pedidos->total(),
+        ];
+    }
     /**
      * Show the form for creating a new resource.
      */

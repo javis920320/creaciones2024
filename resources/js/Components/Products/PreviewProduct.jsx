@@ -5,6 +5,7 @@ import 'react-photo-view/dist/react-photo-view.css'; // Asegúrate de importar e
 const PreviewProduct = ({ images }) => {
     return (
         <PhotoProvider>
+
             <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
                 {images.map((image, index) => (
                     <PhotoView key={index} src={image.image_path}>
@@ -17,6 +18,8 @@ const PreviewProduct = ({ images }) => {
                 ))}
             </div>
         </PhotoProvider>
+       
+
     );
 };
 

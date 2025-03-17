@@ -1,0 +1,292 @@
+{
+    "categorias": [
+    {
+    "id": 1,
+    "created_at": "2024-10-08T18:51:38.000000Z",
+    "updated_at": "2024-10-08T18:51:38.000000Z",
+    "nameCategory": "Cassandre Breitenberg",
+    "description": "Deleniti cupiditate ut nobis molestiae voluptate.",
+    "status": "active"
+    },
+    {
+    "id": 2,
+    "created_at": "2024-10-08T18:51:38.000000Z",
+    "updated_at": "2024-10-08T18:51:38.000000Z",
+    "nameCategory": "Mazie Keeling",
+    "description": "Repellat dolor eum asperiores perspiciatis.",
+    "status": "active"
+    },
+    {
+    "id": 5,
+    "created_at": "2024-10-08T18:51:38.000000Z",
+    "updated_at": "2024-10-08T18:51:38.000000Z",
+    "nameCategory": "Patrick Ratke Sr.",
+    "description": "Necessitatibus dolores vel fugiat et dolorem odio at et.",
+    "status": "active"
+    },
+    {
+    "id": 6,
+    "created_at": "2024-10-08T18:51:38.000000Z",
+    "updated_at": "2024-10-08T18:51:38.000000Z",
+    "nameCategory": "Mr. Benny Carroll",
+    "description": "Voluptas amet quis unde sit perferendis error non.",
+    "status": "active"
+    },
+    {
+    "id": 9,
+    "created_at": "2024-10-08T18:51:38.000000Z",
+    "updated_at": "2024-10-08T18:51:38.000000Z",
+    "nameCategory": "Haven Waelchi",
+    "description": "Tempore ut ut id ea id qui sequi.",
+    "status": "active"
+    },
+    {
+    "id": 11,
+    "created_at": "2024-10-08T18:51:38.000000Z",
+    "updated_at": "2024-10-08T18:51:38.000000Z",
+    "nameCategory": "Angela Turcotte I",
+    "description": "Dolore ut ipsam occaecati rem placeat qui.",
+    "status": "active"
+    },
+    {
+    "id": 15,
+    "created_at": "2024-10-08T18:51:38.000000Z",
+    "updated_at": "2024-10-08T18:51:38.000000Z",
+    "nameCategory": "Mr. Curt Volkman V",
+    "description": "Reprehenderit et libero sed fuga magnam.",
+    "status": "active"
+    },
+    {
+    "id": 19,
+    "created_at": "2024-10-08T18:51:38.000000Z",
+    "updated_at": "2024-10-08T18:51:38.000000Z",
+    "nameCategory": "Halle Marks",
+    "description": "Et et illum maxime omnis.",
+    "status": "active"
+    },
+    {
+    "id": 21,
+    "created_at": "2024-10-08T18:51:38.000000Z",
+    "updated_at": "2024-10-08T18:51:38.000000Z",
+    "nameCategory": "Dr. Athena Klein",
+    "description": "Id distinctio quidem excepturi et ea.",
+    "status": "active"
+    },
+    {
+    "id": 23,
+    "created_at": "2024-10-08T18:51:38.000000Z",
+    "updated_at": "2024-10-08T18:51:38.000000Z",
+    "nameCategory": "Willy Wiegand",
+    "description": "Ea impedit corrupti odio amet aut maxime.",
+    "status": "active"
+    },
+    {
+    "id": 26,
+    "created_at": "2024-10-08T18:51:38.000000Z",
+    "updated_at": "2024-10-08T18:51:38.000000Z",
+    "nameCategory": "Katherine Moen",
+    "description": "Et et ad id quas.",
+    "status": "active"
+    },
+    {
+    "id": 32,
+    "created_at": "2024-10-08T18:51:40.000000Z",
+    "updated_at": "2024-10-08T18:51:40.000000Z",
+    "nameCategory": "Nyasia Jacobi",
+    "description": "Molestiae molestiae magni rerum cum ut culpa nesciunt.",
+    "status": "active"
+    },
+    {
+    "id": 33,
+    "created_at": "2024-10-08T18:51:40.000000Z",
+    "updated_at": "2024-10-08T18:51:40.000000Z",
+    "nameCategory": "Prof. Isac Heidenreich",
+    "description": "Sit possimus sed esse repellat.",
+    "status": "active"
+    },
+    {
+    "id": 34,
+    "created_at": "2024-10-08T18:51:40.000000Z",
+    "updated_at": "2024-10-08T18:51:40.000000Z",
+    "nameCategory": "Casey Predovic",
+    "description": "Aspernatur nihil ut accusantium id.",
+    "status": "active"
+    },
+    {
+    "id": 35,
+    "created_at": "2024-10-08T18:51:40.000000Z",
+    "updated_at": "2024-10-08T18:51:40.000000Z",
+    "nameCategory": "Neva Miller",
+    "description": "Est modi aliquid corrupti.",
+    "status": "active"
+    },
+    {
+    "id": 36,
+    "created_at": "2024-10-08T18:51:40.000000Z",
+    "updated_at": "2024-10-08T18:51:40.000000Z",
+    "nameCategory": "Jesus Christiansen",
+    "description": "Aliquid dolorum repudiandae vel tempore veniam corporis.",
+    "status": "active"
+    },
+    {
+    "id": 37,
+    "created_at": "2024-10-08T18:51:40.000000Z",
+    "updated_at": "2024-10-08T18:51:40.000000Z",
+    "nameCategory": "Neoma Cremin",
+    "description": "Accusamus voluptas labore voluptatem et.",
+    "status": "active"
+    },
+    {
+    "id": 42,
+    "created_at": "2024-10-08T18:51:40.000000Z",
+    "updated_at": "2024-10-08T18:51:40.000000Z",
+    "nameCategory": "Rebekah Brown",
+    "description": "Expedita corporis suscipit voluptatem harum fugiat fuga.",
+    "status": "active"
+    },
+    {
+    "id": 43,
+    "created_at": "2024-10-08T18:51:40.000000Z",
+    "updated_at": "2024-10-08T18:51:40.000000Z",
+    "nameCategory": "Jeanette Marks",
+    "description": "Est amet asperiores molestiae culpa ex consequatur fugit.",
+    "status": "active"
+    },
+    {
+    "id": 44,
+    "created_at": "2024-10-08T18:51:40.000000Z",
+    "updated_at": "2024-10-08T18:51:40.000000Z",
+    "nameCategory": "Arlene Mayert",
+    "description": "Adipisci cum aperiam ad at autem dignissimos.",
+    "status": "active"
+    },
+    {
+    "id": 46,
+    "created_at": "2024-10-08T18:51:40.000000Z",
+    "updated_at": "2024-10-08T18:51:40.000000Z",
+    "nameCategory": "Ramona Williamson",
+    "description": "Similique eaque in est iure.",
+    "status": "active"
+    },
+    {
+    "id": 47,
+    "created_at": "2024-10-08T18:51:40.000000Z",
+    "updated_at": "2024-10-08T18:51:40.000000Z",
+    "nameCategory": "Elnora Hegmann",
+    "description": "Cumque ratione iste reprehenderit mollitia.",
+    "status": "active"
+    },
+    {
+    "id": 48,
+    "created_at": "2024-10-08T18:51:40.000000Z",
+    "updated_at": "2024-10-08T18:51:40.000000Z",
+    "nameCategory": "Abel Muller Sr.",
+    "description": "Provident illum necessitatibus veritatis ab sed quibusdam.",
+    "status": "active"
+    },
+    {
+    "id": 50,
+    "created_at": "2024-10-08T18:51:40.000000Z",
+    "updated_at": "2024-10-08T18:51:40.000000Z",
+    "nameCategory": "Prof. Chasity Rodriguez",
+    "description": "Qui optio placeat rerum dolorum et possimus et.",
+    "status": "active"
+    },
+    {
+    "id": 53,
+    "created_at": "2024-10-08T18:51:40.000000Z",
+    "updated_at": "2024-10-08T18:51:40.000000Z",
+    "nameCategory": "Lazaro Wolf",
+    "description": "Eum quis enim eveniet quisquam modi voluptatem animi.",
+    "status": "active"
+    },
+    {
+    "id": 55,
+    "created_at": "2024-10-08T18:51:40.000000Z",
+    "updated_at": "2024-10-08T18:51:40.000000Z",
+    "nameCategory": "Ericka Beatty Sr.",
+    "description": "Minima eius eum optio consequatur maiores deserunt.",
+    "status": "active"
+    },
+    {
+    "id": 57,
+    "created_at": "2024-10-08T18:51:40.000000Z",
+    "updated_at": "2024-10-08T18:51:40.000000Z",
+    "nameCategory": "Earnestine Raynor",
+    "description": "Laborum aut laboriosam voluptas et ut sint.",
+    "status": "active"
+    },
+    {
+    "id": 60,
+    "created_at": "2024-10-08T18:51:40.000000Z",
+    "updated_at": "2024-10-08T18:51:40.000000Z",
+    "nameCategory": "Mrs. Rossie Gleason MD",
+    "description": "Reiciendis id cum doloremque quisquam consequatur dolorem.",
+    "status": "active"
+    },
+    {
+    "id": 61,
+    "created_at": "2024-10-08T18:51:40.000000Z",
+    "updated_at": "2024-10-08T18:51:40.000000Z",
+    "nameCategory": "Kevin Kihn",
+    "description": "Velit qui qui placeat aut ut.",
+    "status": "active"
+    },
+    {
+    "id": 62,
+    "created_at": "2024-10-08T18:51:40.000000Z",
+    "updated_at": "2024-10-08T18:51:40.000000Z",
+    "nameCategory": "Ivy Anderson",
+    "description": "Dolore eos placeat voluptates nesciunt dolorem dolorum aut.",
+    "status": "active"
+    },
+    {
+    "id": 63,
+    "created_at": "2024-10-08T18:51:40.000000Z",
+    "updated_at": "2024-10-08T18:51:40.000000Z",
+    "nameCategory": "Mr. Dell Kozey",
+    "description": "Aut velit rerum totam iure ut officia.",
+    "status": "active"
+    },
+    {
+    "id": 64,
+    "created_at": "2024-10-08T18:51:40.000000Z",
+    "updated_at": "2024-10-08T18:51:40.000000Z",
+    "nameCategory": "Cathrine Swaniawski",
+    "description": "Est ut similique in ea non harum id ad.",
+    "status": "active"
+    },
+    {
+    "id": 65,
+    "created_at": "2024-10-08T18:51:40.000000Z",
+    "updated_at": "2024-10-08T18:51:40.000000Z",
+    "nameCategory": "Florencio Watsica",
+    "description": "Quos iusto neque ea quo labore animi.",
+    "status": "active"
+    },
+    {
+    "id": 66,
+    "created_at": "2024-10-08T18:51:40.000000Z",
+    "updated_at": "2024-10-08T18:51:40.000000Z",
+    "nameCategory": "Prof. Ramona Volkman II",
+    "description": "Aperiam nihil ut optio sapiente molestiae nam.",
+    "status": "active"
+    },
+    {
+    "id": 67,
+    "created_at": "2024-10-10T15:59:38.000000Z",
+    "updated_at": "2024-10-10T15:59:38.000000Z",
+    "nameCategory": "Bordados",
+    "description": null,
+    "status": "active"
+    },
+    {
+    "id": 68,
+    "created_at": "2024-10-21T23:47:34.000000Z",
+    "updated_at": "2024-10-21T23:47:34.000000Z",
+    "nameCategory": "Pantalones",
+    "description": null,
+    "status": "active"
+    }
+    ]
+    }

@@ -1,54 +1,58 @@
 import axios from "axios";
-import React, { useEffect, useMemo, useState } from "react";
+import { useEffect, useState } from "react";
 
-function useCategorias() {
-    const [categorias, setCategorias] = useState([]);
-    const [loading, setLoading] = useState(true);
-    const [error, setError] = useState(null);
+function useCategorias({ search =""}) {  
+  const [categorias, setCategorias] = useState([]);
+  const [categoriaSearch, setCategoriaSearch] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
 
-    useEffect(() => {
-        let isMounted = true;
-        const fecthCategorias = async () => {
-            try {
-                setLoading(true);
-                const resp = await axios.get(route("categorias"));
+  useEffect(() => {
+    let isMounted = true;
+    const fetchCategorias = async () => {
+      try {
+        setLoading(true);
+        const resp = await axios.get(route("categorias"));
 
-                if (isMounted) {
-                    
-                    setCategorias(resp.data.categorias);
-                    setLoading(false);
-                }
-            } catch (error) {
-                if (isMounted) {
-                    setError(error.message);
-                    setLoading(false);
-                }
-            }
-        };
-
-        fecthCategorias();
-
-        return () => {
-            isMounted = false;
-        };
-
-    }, []);
-
-    const categoriememorize = useMemo(() => categorias, [categorias]);
-
-    const inforCategoria = (idcategoria) => {
-        // Encuentra la categoría por su ID
-        const categoriaEncontrada = categoriememorize.find(
-            (categoria) => categoria.id === idcategoria
-        );
-
-        // Retorna el nombre de la categoría si se encuentra, o un mensaje por defecto
-        return categoriaEncontrada
-            ? categoriaEncontrada.nameCategory
-            : "Categoría no encontrada";
+        if (isMounted) {
+          setCategorias(resp.data.categorias);
+          setCategoriaSearch(resp.data.categorias); // Inicializa con todas las categorías
+          setLoading(false);
+        }
+      } catch (error) {
+        if (isMounted) {
+          setError(error.message);
+          setLoading(false);
+        }
+      }
     };
 
-    return { categorias: categoriememorize, inforCategoria };
+    fetchCategorias();
+
+    return () => {
+      isMounted = false;
+    };
+  }, []);
+
+  useEffect(() => {
+    const handler = setTimeout(() => {
+      if (search) {
+        console.log(search)
+        const filteredCategorias = categorias.filter((categoria) =>
+          categoria.nameCategory && categoria.nameCategory.toLowerCase().includes(search.toLowerCase())
+        );
+        setCategoriaSearch(filteredCategorias);
+      } else {
+        setCategoriaSearch(categorias);
+      }
+    }, 300); // Ajusta el retraso del debounce según sea necesario
+
+    return () => {
+      clearTimeout(handler);
+    };
+  }, [search, categorias]);
+
+  return { categorias, categoriaSearch, loading, error };
 }
 
 export default useCategorias;

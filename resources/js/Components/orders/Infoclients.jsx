@@ -9,7 +9,7 @@ import React from "react";
 const Infoclients = ({ pedido }) => {
      const {cliente,factura,id,created_at,status,envioDomicilio}= pedido.data[0]
     return (
-        <>
+        <section className=" dark:text-gray-300  text-gray-600">
             <div className="flex justify-between items-center">
                 <span className="font-semibold">Código:</span>
                 <span>{id}</span>
@@ -49,9 +49,9 @@ const Infoclients = ({ pedido }) => {
             <div className="flex items-center gap-2">
                 <TruckIcon className="h-4 w-4" />
                 <span className="font-semibold">Envío Domicilio:</span>
-                <span>{envioDomicilio?"Domicilio solicitado":"No solicitado"}</span>
+                <span>{envioDomicilio?<span className="text-green-100 p-1 text-center bg-green-300 rounded">Domicilio solicitado</span>:<span className="p-1 rounded text-gray-200 bg-gray-400">No solicitado</span>}</span>
             </div>
-        </>
+        </section>
     );
 };
 

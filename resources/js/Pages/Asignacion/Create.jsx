@@ -25,7 +25,7 @@ import FormularioAsignacion from "@/Components/Asignacion/FormularioAsignacion";
 
 const Create = ({ auth, empleados, pedido }) => {
    
-    const{categorias,inforCategoria} = useCategorias();
+    const{categorias,inforCategoria} = useCategorias([]);
     const { ordenes } =
         pedido.data[0];
     const [newClientDialogOpen, setNewClientDialogOpen] = useState(false);

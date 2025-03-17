@@ -9,7 +9,7 @@ use Illuminate\Database\Eloquent\Model;
 class Pedido extends Model
 {
     use HasFactory;
-    protected $fillable = ["factura", "fechaEntrega", "clientId", "estado", "impreso", "notas", "envioDomicilio"];
+    protected $fillable = ["factura", "fechaEntrega", "clientId", "estado", "impreso", "notas", "envioDomicilio","total"];
 
     public function cliente()
     {
