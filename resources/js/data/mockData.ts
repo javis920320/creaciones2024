@@ -1,1 +1,1 @@
-export const customerTypes=["univesidad","empresa","particular","colegio","otro"]; 
+export const customerTypes=["Universidad","empresa","particular","colegio","otro"]; 

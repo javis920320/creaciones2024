@@ -29,6 +29,7 @@ class ProductController extends Controller
         return Inertia::render("Products/v2/Index",["categories"=>$categorias,"products"=>$products ]);      
     }
 
+  
     
 
     /**
@@ -204,4 +205,13 @@ class ProductController extends Controller
         return response()->json($products); 
 
     }
+    public function getAllProducts()
+    {
+        dd("hola"); 
+        $productsdb = Product::where('status', 'Activo')->orderBy('nameProduct')->get();
+        $products = ProductResource::collection($productsdb);   
+        
+        return response()->json($products);
+    }   
+
 }

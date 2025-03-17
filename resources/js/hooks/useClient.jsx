@@ -2,7 +2,14 @@ import axios from "axios";
 import React, { useState } from "react";
 
 function useClient() {
+     const [clients, setClients] = useState([]);    
      const [errorsCLient,setErrorsClient]=useState(null)
+
+     const getListClients = async() => { 
+        const resp= await axios("clients")
+        setClients(resp.data) 
+
+     }
     const updateStatusClient = (client, status) => {
         axios
             .patch(route("uptstatusclient", client), {
@@ -41,7 +48,7 @@ function useClient() {
     };
     
 
-    return { updateStatusClient ,updateDataClient,errorsCLient,setErrorsClient};
+    return { updateStatusClient ,updateDataClient,errorsCLient,setErrorsClient ,getListClients,clients};
 }
 
 export default useClient;

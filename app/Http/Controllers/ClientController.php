@@ -140,6 +140,15 @@ class ClientController extends Controller
         //
     }
 
+    public function getCliente(Client $client)
+    {
+        return response()->json($client);
+    }   
+    public function getClientes()
+    {
+        $clients = Client::where("status", "active")->get();
+        return response()->json($clients);
+    }
     public function serchClient($query)
     {
         try {

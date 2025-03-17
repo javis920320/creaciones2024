@@ -53,6 +53,7 @@ class EntidadController extends Controller
     }
 
     public function entidadesTipo($tipo){
+   
         $entidades = Entidad::where('tipo',$tipo)->get();
         return response()->json(['entidades' => $entidades]);
     }   

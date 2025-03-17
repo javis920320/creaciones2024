@@ -37,7 +37,9 @@ export function useEntidad() {
     };
 
      const getEntidadforType = async (tipo) => {
-         console.log(tipo)
+        
+       console.log("tipo",tipo) ;
+       
         setErrorEntidad(null);
         try {
             const response = await fetch(route("entidades.tipo", { tipo: tipo }), {
@@ -53,7 +55,7 @@ export function useEntidad() {
             }
 
             const result = await response.json();
-            //setEntidadTipo(result);
+            console.log(result)
             return result;
         } catch (error) {
      

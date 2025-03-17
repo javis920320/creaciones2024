@@ -14,26 +14,35 @@ function useProducto(idcategoria = []) {
         costoProduccionExtra: "",
         costoExterno: "",
         status: "Activo",
-        detalles:{
+        detalles: {
             entidad_id: "",
-            program: "",    
-        }
+            program: "",
+        },
     });
-        const resetForm = () => {
-            setFormData({
-                nameProduct: "",
-                price: "",
-                category_id: "",
-                sector: [],
-                images_url: "",
-                description: "",
-                costo_produccion: "",
-                costoProduccionExtra: "",
-                costoExterno: "",
-                status: "Activo",
-            });
-        };
-    
+     const getAllProducts = async () => { 
+        try {
+            const { data } = await axios(route("products.all"));
+            setproducts(data);
+        } catch (error) {
+            setErrorProducts(error);
+        }   
+       }
+
+    const resetForm = () => {
+        setFormData({
+            nameProduct: "",
+            price: "",
+            category_id: "",
+            sector: [],
+            images_url: "",
+            description: "",
+            costo_produccion: "",
+            costoProduccionExtra: "",
+            costoExterno: "",
+            status: "Activo",
+        });
+    };
+
     const [products, setproducts] = useState([]);
     const obtenerProductosconcategoria = async (idcategoria) => {
         try {
@@ -54,22 +63,27 @@ function useProducto(idcategoria = []) {
 
     const createProducto = async (data) => {
         try {
-            
-           const resp= await axios.post(route("product.store"), data);
-           
-         
-              return resp.data; 
-         
+            const resp = await axios.post(route("product.store"), data);
+
+            return resp.data;
 
             //obtenerProductosconcategoria(idcategoria);
-
         } catch (error) {
-            console.log(error.response)
+            console.log(error.response);
             setErrorProducts(error);
         }
     };
 
-    return { obtenerProductosconcategoria, products, errorsProduct,createProducto, formData, setFormData ,resetForm}; 
+    return {
+        obtenerProductosconcategoria,
+        products,
+        errorsProduct,
+        createProducto,
+        formData,
+        setFormData,
+        resetForm,
+        getAllProducts, 
+    };
 }
 
 export default useProducto;

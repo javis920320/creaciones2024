@@ -1,60 +1,73 @@
-import React, { useEffect, useState } from "react";
-import AuthenticatedLayout from "@/Layouts/AuthenticatedLayout";
-import { Head, useForm } from "@inertiajs/react";
-import TextInput from "@/Components/TextInput";
-import InputLabel from "@/Components/InputLabel";
-import Section from "@/Components/Section";
-import DangerButton from "@/Components/DangerButton";
-import Checkbox from "@/Components/Checkbox";
-import PrimaryButton from "@/Components/PrimaryButton";
+import React, { useState } from "react";
+import { Head } from "@inertiajs/react";
 import {
-    Autocomplete,
+    Container,
+    Typography,
+    Box,
     TextField,
-    Dialog,
-    DialogActions,
-    DialogContent,
-    DialogTitle,
+    Autocomplete,
+    Snackbar,
+    Alert,
+    Checkbox,
+    Card,
     Button,
-    Divider,
 } from "@mui/material";
-import axios from "axios";
-import InputError from "@/Components/InputError";
-import FormClient from "@/Components/FormClient";
+import AuthenticatedLayout from "@/Layouts/AuthenticatedLayout";
+import Section from "@/Components/Section";
 import ClientSelected from "@/Components/ClientSelected";
-import SecondaryButton from "@/Components/SecondaryButton";
+import axios from "axios";
+import TruckIcon from "@/Icons/TruckIcon";
+import { FiPackage } from "react-icons/fi";
+import DB from "./products";
+import ListItems from "@/Components/Pedidos/ListItems";
+import ModalMui from "@/Components/Modal/ModalMui";
+import AddProductOrder from "@/Components/Products/AddProductOrder";
 
 const Index = ({ auth, clients }) => {
-    const { post, data, setData, errors } = useForm({
-        cliente: { id: null, username: "" },
-        factura: "",
-        fechaEntrega: "",
-        envioDomicilio: false,
+    const [data, setData] = useState({
+        cliente: null,
+
+        items: [],
+        delivery: {
+            type: "store",
+            date: null,
+        },
     });
+    const existDBProd = DB.products.length > 0;
+    const [snackbarOpen, setSnackbarOpen] = useState(false);
+    const [snackbarMessage, setSnackbarMessage] = useState("");
+    const [snackbarSeverity, setSnackbarSeverity] = useState("success");
+    const [openModal, setOpenModal] = useState(false);
 
-    const [newClientDialogOpen, setNewClientDialogOpen] = useState(false);
-
-    const handleClientChange = (event, value) => {
-        if (value) {
-            setData("cliente", value);
-        }
-    };
-
-    const handleNewClientSubmit = async () => {
+    const searchCliente = async (value) => {
         try {
-            const response = await axios.post(route("client.store"), newClient);
-            setData("cliente", response.data);
-            setNewClientDialogOpen(false);
-            setNewClient({ username: "", email: "" });
+            const response = await axios.get(route("clients.search"), {
+                params: { query: value },
+            });
+            setClients(response.data);
         } catch (error) {
-            console.error("Error creating client:", error);
+            console.error("Error searching clients:", error);
         }
     };
 
-    
+     const handleAddProduct=()=>{
+        
+     }
+    const handleClientChange = (event, value) => {
+        setData((prev) => ({
+            ...prev,
+            cliente: value,
+        }));
+    };
 
-    const handleSubmit = (e) => {
-        e.preventDefault();
-        post(route("pedido.store"));
+    const showSnackbar = (message, severity) => {
+        setSnackbarMessage(message);
+        setSnackbarSeverity(severity);
+        setSnackbarOpen(true);
+    };
+
+    const handleCloseSnackbar = () => {
+        setSnackbarOpen(false);
     };
 
     return (
@@ -66,95 +79,120 @@ const Index = ({ auth, clients }) => {
                 </h2>
             }
         >
-            <Head title="Crear Pedidos " />
-            <div className="flex justify-center">
-                
-                <Section>
-                    <ClientSelected client={data.cliente}/>
-                    <div className="flex gap-2 w-full justify-start my-4">
-                            <Autocomplete
-                                sx={{ width: "390px" }}
-                                options={clients}
-                                getOptionLabel={(option) =>
-                                    option.identification_number +
-                                    " " +
-                                    option.full_name
-                                }
-                                onInputChange={(event, value) =>
-                                    searchCliente(value)
-                                }
-                                onChange={handleClientChange}
-                                renderInput={(params) => (
-                                    <TextField
-                                        {...params}
-                                        placeholder="Buscar cliente"
-                                    />
-                                )}
-                                noOptionsText={
-                                    <SecondaryButton className="my-2" onClick={()=>setNewClientDialogOpen(true)}>Buscar Cliente</SecondaryButton>
-                                }
-                            />
-                        
-                    </div>
-                    
-                    <form onSubmit={handleSubmit}>
-                     
-                        <Divider/>
-                        <div className="flex gap-2 w-full justify-start my-6">
-                         
-                            <div>
-                                <InputLabel>Factura</InputLabel>
-                                <TextInput
-                                    onChange={(e) =>
-                                        setData("factura", e.target.value)
-                                    }
-                                    placeholder="Factura #123"
-                                    value={data.factura}
-                                />
-                            </div>
-                            <div>
-                                <InputLabel>Fecha de entrega </InputLabel>
-                                <TextInput
-                                    type="date"
-                                    onChange={(e) =>
-                                        setData("fechaEntrega", e.target.value)
-                                    }
-                                    value={data.fechaEntrega}
-                                />
-                            </div>
-                        </div>
-      
-                        <div>
-                            <small className="text-gray-800 dark:text-gray-300">El costo del domicilio es $5000</small>
-                            <InputLabel>Solicitar envío domicilio</InputLabel>
-                            <Checkbox
-                                onChange={(e) =>
-                                    setData("envioDomicilio", e.target.checked)
-                                }
-                                checked={data.envioDomicilio}
-                            />
-                        </div>
-                        <PrimaryButton>Crear Pedido</PrimaryButton>
-                    </form>
-                </Section>
-            </div>
+            <Head title="Crear Pedidos" />
+            <Container maxWidth="md">
+                <Card sx={{ p: 2, mb: 4 }}>
+                    <Box>
+                        <Typography variant="h6">Datos del Cliente</Typography>
 
-            <Dialog
-                open={newClientDialogOpen}
-                onClose={() => setNewClientDialogOpen(false)}
-               
-            >
-                <DialogTitle>Crear nuevo cliente</DialogTitle>
-                <DialogContent>
-                    <FormClient  setData={setData} setNewClientDialogOpen={setNewClientDialogOpen}  />
-                </DialogContent>
-                <DialogActions>
-                    <Button onClick={() => setNewClientDialogOpen(false)}>
-                        Cancelar
-                    </Button>
-                    
-                </DialogActions>
-            </Dialog>
+                        <Autocomplete
+                            id="cliente"
+                            options={clients}
+                            getOptionLabel={(option) => option.full_name}
+                            onChange={handleClientChange}
+                            renderInput={(params) => (
+                                <TextField
+                                    {...params}
+                                    label="Cliente"
+                                    variant="outlined"
+                                />
+                            )}
+                        />
+                        {data.cliente && (
+                            <ClientSelected
+                                clients={clients}
+                                value={data.cliente}
+                                onChange={handleClientChange}
+                            />
+                        )}
+                    </Box>
+                    <Box
+                        sx={{
+                            display: "flex",
+                            justifyContent: "start",
+                            bgcolor: "background.paper",
+                            flexDirection: "column",
+                            boxShadow: 1,
+                            p: 4,
+                        }}
+                    >
+                        <Typography
+                            sx={{
+                                display: "flex",
+                                gap: 2,
+                                alignItems: "center",
+                            }}
+                        >
+                            {" "}
+                            <TruckIcon></TruckIcon>Información de Entrega
+                        </Typography>
+                        <Box>
+                            <div className="flex gap-2 items-center">
+                                <div className="columns-6">
+                                    <Checkbox></Checkbox>{" "}
+                                    <Typography>
+                                        Recoger en la tienda
+                                    </Typography>
+                                </div>
+
+                                <TextField type="date" fullWidth></TextField>
+                            </div>
+                        </Box>
+                    </Box>
+                    <Box sx={{ mt: 2, p: 2 }}>
+                        <Typography
+                            variant="h6"
+                            sx={{ display: "flex", gap: 2 }}
+                        >
+                            {" "}
+                            <FiPackage />
+                            Items del Pedido
+                        </Typography>
+                        <Button onClick={() => setOpenModal(true)}>
+                            Agregar Producto
+                        </Button>
+                        {JSON.stringify(openModal)}
+                        <ModalMui
+                            openModal={openModal}
+                            handleClose={() => setOpenModal(false)}
+                        >
+                            <Card>
+                                <AddProductOrder  categories={[]}
+                   
+                        addProduct={handleAddProduct}/>{" "}
+                             
+                            </Card>
+                        </ModalMui>
+                        {existDBProd ? (
+                            DB.products.map((product) => (
+                                <ListItems
+                                    item={product}
+                                    key={product.id}
+                                ></ListItems>
+                            ))
+                        ) : (
+                            <Typography color="textSecondary">
+                                No hay items en el pedido. Haga clic en "Agregar
+                                Item" para comenzar.
+                            </Typography>
+                        )}
+                    </Box>
+                </Card>
+
+                <Snackbar
+                    open={snackbarOpen}
+                    autoHideDuration={6000}
+                    onClose={handleCloseSnackbar}
+                >
+                    <Alert
+                        onClose={handleCloseSnackbar}
+                        severity={snackbarSeverity}
+                        sx={{ width: "100%" }}
+                    >
+                        {snackbarMessage}
+                    </Alert>
+                </Snackbar>
+            </Container>
         </AuthenticatedLayout>
     );
 };

@@ -60,6 +60,9 @@ Route::middleware('auth')->group(function(){
     Route::post('/client/store',[ClientController::class,'store'])->name('client.store');
     Route::get("/findClient/{query}",[ClientController::class,"serchClient"])->name("client.search");
     Route::patch("/client/{client}",[ClientController::class ,"updateStatusClient"])->name("uptstatusclient");
+
+    //get all clients   
+    Route::get("/getclients",[ClientController::class,"getClientes"])->name("clients");
 });
 
 Route::middleware('auth')->group(function(){
@@ -95,7 +98,9 @@ Route::middleware('auth')->group(function(){
     Route::post('/produc/store',[ProductController::class,'store'])->name('product.store');
     Route::post("/product/image",[ProductImageController::class,"store"])->name("product.image");
     Route::delete("/product/image",[ProductImageController::class,"destroy"])->name("delete.image");
+   
 });
+Route::get("/productos/all",[ProductController::class,"getAllProducts"])->name("products.all");
 
 
 //route for new product
